@@ -14,14 +14,14 @@ prompt = st.text_input("Enter your Divine Rap Idea")
 # STEP 1: Scene Generation
 def generate_scenes(prompt):
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="gpt-3.5-turbo",
         messages=[
-            {"role": "user", "content": f"Create exactly 5 short cinematic scenes (one line each) for: {prompt}"}
+            {"role": "user", "content": f"Create exactly 3 short cinematic scenes (one line each) for: {prompt}"}
         ]
     )
     scenes = response.choices[0].message.content.split("\n")
     scenes = [s.strip("- ").strip() for s in scenes if s.strip()]
-    return scenes[:5]
+    return scenes[:3]
 
 # STEP 2: Image Generation
 def generate_image(scene, i):
