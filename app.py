@@ -1,6 +1,6 @@
 import streamlit as st
 import google.generativeai as genai
-from moviepy.editor import ImageClip, concatenate_videoclips, TextClip, CompositeVideoClip
+from moviepy.editor import ImageClip, concatenate_videoclips
 import requests
 from PIL import Image
 from io import BytesIO
@@ -10,7 +10,7 @@ genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 model = genai.GenerativeModel("gemini-1.5-flash")
 
 st.set_page_config(page_title="Divine Rap AI Studio", layout="wide")
-st.title("🎤 Divine Rap AI Content Factory (ULTIMATE)")
+st.title("🎤 Divine Rap AI Content Factory (Ultra Version)")
 
 menu = st.sidebar.selectbox("Choose Tool", [
     "Script Generator",
@@ -22,39 +22,58 @@ menu = st.sidebar.selectbox("Choose Tool", [
 ])
 
 # -------------------------------
-# 1. SCRIPT
+# 1. SCRIPT GENERATOR
 # -------------------------------
 if menu == "Script Generator":
     prompt = st.text_input("Enter topic")
 
     if st.button("Generate Script"):
-        res = model.generate_content(f"Write devotional rap lyrics on: {prompt}")
+        res = model.generate_content(
+            f"Write a powerful devotional rap lyrics on: {prompt}"
+        )
         st.write(res.text)
 
 # -------------------------------
-# 2. IMAGE GENERATOR
+# 2. IMAGE GENERATOR (2K / 4K)
 # -------------------------------
 elif menu == "Image Generator":
     prompt = st.text_input("Enter image idea")
 
     ratio = st.selectbox("Aspect Ratio", ["1:1", "9:16", "16:9"])
+    quality = st.selectbox("Quality", ["HD", "2K", "4K"])
 
     if st.button("Generate Image"):
         url = f"https://image.pollinations.ai/prompt/{prompt}"
-        img = Image.open(BytesIO(requests.get(url).content))
+        response = requests.get(url)
+        img = Image.open(BytesIO(response.content))
 
+        # Resolution logic
         if ratio == "9:16":
-            img = img.resize((720,1280))
+            if quality == "HD":
+                size = (720,1280)
+            elif quality == "2K":
+                size = (1440,2560)
+            else:
+                size = (2160,3840)
+
         elif ratio == "16:9":
-            img = img.resize((1280,720))
+            if quality == "HD":
+                size = (1280,720)
+            elif quality == "2K":
+                size = (2560,1440)
+            else:
+                size = (3840,2160)
+
         else:
-            img = img.resize((1024,1024))
+            size = (1024,1024)
 
-        st.image(img)
+        img = img.resize(size)
 
-        img.save("img.png")
-        with open("img.png", "rb") as f:
-            st.download_button("Download", f)
+        st.image(img, caption=f"{ratio} - {quality}")
+
+        img.save("generated.png")
+        with open("generated.png", "rb") as f:
+            st.download_button("Download Image", f, file_name="image.png")
 
 # -------------------------------
 # 3. VIDEO BUILDER
@@ -63,27 +82,26 @@ elif menu == "Video Builder":
     images = st.file_uploader("Upload images", accept_multiple_files=True)
 
     if st.button("Create Video"):
-        files = []
+        image_files = []
 
         for i, img in enumerate(images):
-            name = f"img_{i}.png"
-            with open(name, "wb") as f:
+            file_name = f"img_{i}.png"
+            with open(file_name, "wb") as f:
                 f.write(img.read())
-            files.append(name)
+            image_files.append(file_name)
 
-        clips = []
-
-        for f in files:
-            clip = ImageClip(f).set_duration(2).resize((720,1280)).fadein(0.5).fadeout(0.5)
-            clips.append(clip)
-
+        clips = [ImageClip(img).set_duration(2).resize((720,1280)) for img in image_files]
         video = concatenate_videoclips(clips)
-        video.write_videofile("video.mp4", fps=24)
 
-        st.video("video.mp4")
+        video.write_videofile("output.mp4", fps=24)
+
+        st.video("output.mp4")
+
+        with open("output.mp4", "rb") as f:
+            st.download_button("Download Video", f, file_name="video.mp4")
 
 # -------------------------------
-# 4. TEXT → VIDEO (WITH SUBTITLE)
+# 4. TEXT → VIDEO
 # -------------------------------
 elif menu == "Text → Video":
     prompt = st.text_input("Enter idea")
@@ -93,20 +111,52 @@ elif menu == "Text → Video":
             f"Create 3 cinematic scenes for: {prompt}"
         ).text.split("\n")
 
-        clips = []
+        image_files = []
 
         for i, scene in enumerate(scenes[:3]):
             url = f"https://image.pollinations.ai/prompt/{scene}"
-            img_path = f"scene_{i}.png"
+            img_data = requests.get(url).content
 
-            with open(img_path, "wb") as f:
-                f.write(requests.get(url).content)
+            file_name = f"scene_{i}.png"
+            with open(file_name, "wb") as f:
+                f.write(img_data)
 
-            image_clip = ImageClip(img_path).set_duration(2).resize((720,1280))
+            image_files.append(file_name)
+            st.image(file_name, caption=scene)
 
-            text_clip = TextClip(scene[:40], fontsize=40, color='white', size=(700,200))
-            text_clip = text_clip.set_position(("center","bottom")).set_duration(2)
+        clips = [ImageClip(img).set_duration(2).resize((720,1280)) for img in image_files]
+        video = concatenate_videoclips(clips)
 
+        video.write_videofile("final.mp4", fps=24)
+
+        st.video("final.mp4")
+
+        with open("final.mp4", "rb") as f:
+            st.download_button("Download Video", f, file_name="divine_video.mp4")
+
+# -------------------------------
+# 5. CAPTION + HASHTAGS
+# -------------------------------
+elif menu == "Caption + Hashtags":
+    prompt = st.text_input("Enter topic")
+
+    if st.button("Generate"):
+        res = model.generate_content(
+            f"Generate YouTube title, description and comma-separated tags for: {prompt}"
+        )
+        st.write(res.text)
+
+# -------------------------------
+# 6. HOOK GENERATOR
+# -------------------------------
+elif menu == "Hook Generator":
+    prompt = st.text_input("Enter topic")
+
+    if st.button("Generate Hooks"):
+        res = model.generate_content(
+            f"Generate 5 viral hooks for: {prompt}"
+        )
+        st.write(res.text)
             final = CompositeVideoClip([image_clip, text_clip])
             clips.append(final.fadein(0.5).fadeout(0.5))
 
