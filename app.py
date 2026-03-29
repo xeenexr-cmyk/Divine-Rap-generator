@@ -1,86 +1,145 @@
 import streamlit as st
-import base64
-import os
-from openai import OpenAI
-from moviepy.editor import ImageClip, concatenate_videoclips, AudioFileClip, VideoFileClip
+import google.generativeai as genai
+from moviepy.editor import ImageClip, concatenate_videoclips, TextClip, CompositeVideoClip
+import requests
+from PIL import Image
+from io import BytesIO
 
-# API Key
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+# CONFIG
+genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+model = genai.GenerativeModel("gemini-1.5-flash")
 
-st.title("🎤 Divine Rap Generator (AI)")
+st.set_page_config(page_title="Divine Rap AI Studio", layout="wide")
+st.title("🎤 Divine Rap AI Content Factory (ULTIMATE)")
 
-prompt = st.text_input("Enter your Divine Rap Idea")
+menu = st.sidebar.selectbox("Choose Tool", [
+    "Script Generator",
+    "Image Generator",
+    "Video Builder",
+    "Text → Video",
+    "Caption + Hashtags",
+    "Hook Generator"
+])
 
-# STEP 1: Scene Generation
-def generate_scenes(prompt):
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "user", "content": f"Create exactly 3 short cinematic scenes (one line each) for: {prompt}"}
-        ]
-    )
-    scenes = response.choices[0].message.content.split("\n")
-    scenes = [s.strip("- ").strip() for s in scenes if s.strip()]
-    return scenes[:3]
+# -------------------------------
+# 1. SCRIPT
+# -------------------------------
+if menu == "Script Generator":
+    prompt = st.text_input("Enter topic")
 
-# STEP 2: Image Generation
-def generate_image(scene, i):
-    result = client.images.generate(
-        model="gpt-image-1",
-        prompt=scene,
-        size="1024x1024"
-    )
+    if st.button("Generate Script"):
+        res = model.generate_content(f"Write devotional rap lyrics on: {prompt}")
+        st.write(res.text)
 
-    image_base64 = result.data[0].b64_json
-    image_bytes = base64.b64decode(image_base64)
+# -------------------------------
+# 2. IMAGE GENERATOR
+# -------------------------------
+elif menu == "Image Generator":
+    prompt = st.text_input("Enter image idea")
 
-    file_name = f"scene_{i}.png"
-    with open(file_name, "wb") as f:
-        f.write(image_bytes)
+    ratio = st.selectbox("Aspect Ratio", ["1:1", "9:16", "16:9"])
 
-    return file_name
+    if st.button("Generate Image"):
+        url = f"https://image.pollinations.ai/prompt/{prompt}"
+        img = Image.open(BytesIO(requests.get(url).content))
 
-# STEP 3: Video Creation
-def create_video(images):
-    clips = []
-    for img in images:
-        clip = ImageClip(img).set_duration(3)
-        clips.append(clip)
+        if ratio == "9:16":
+            img = img.resize((720,1280))
+        elif ratio == "16:9":
+            img = img.resize((1280,720))
+        else:
+            img = img.resize((1024,1024))
 
-    video = concatenate_videoclips(clips, method="compose")
-    video.write_videofile("output.mp4", fps=24)
+        st.image(img)
 
-    return "output.mp4"
+        img.save("img.png")
+        with open("img.png", "rb") as f:
+            st.download_button("Download", f)
 
-# STEP 4: Add Music
-def add_music(video_path):
-    video = VideoFileClip(video_path)
-    audio = AudioFileClip("music/bg.mp3").subclip(0, video.duration)
+# -------------------------------
+# 3. VIDEO BUILDER
+# -------------------------------
+elif menu == "Video Builder":
+    images = st.file_uploader("Upload images", accept_multiple_files=True)
 
-    final = video.set_audio(audio)
-    final.write_videofile("final.mp4", fps=24)
+    if st.button("Create Video"):
+        files = []
 
-    return "final.mp4"
+        for i, img in enumerate(images):
+            name = f"img_{i}.png"
+            with open(name, "wb") as f:
+                f.write(img.read())
+            files.append(name)
 
-# MAIN
-if st.button("Generate Divine Video"):
-    if not prompt:
-        st.warning("Please enter a prompt")
-    else:
-        st.write("⚡ Generating Scenes...")
-        scenes = generate_scenes(prompt)
+        clips = []
 
-        images = []
-        for i, scene in enumerate(scenes):
-            st.write(f"🎬 {scene}")
-            img = generate_image(scene, i)
-            images.append(img)
+        for f in files:
+            clip = ImageClip(f).set_duration(2).resize((720,1280)).fadein(0.5).fadeout(0.5)
+            clips.append(clip)
 
-        st.write("🎥 Creating Video...")
-        video = create_video(images)
+        video = concatenate_videoclips(clips)
+        video.write_videofile("video.mp4", fps=24)
 
-        st.write("🎵 Adding Music...")
-        final_video = add_music(video)
+        st.video("video.mp4")
 
-        st.success("✅ Done!")
-        st.video(final_video)
+# -------------------------------
+# 4. TEXT → VIDEO (WITH SUBTITLE)
+# -------------------------------
+elif menu == "Text → Video":
+    prompt = st.text_input("Enter idea")
+
+    if st.button("Generate Video"):
+        scenes = model.generate_content(
+            f"Create 3 cinematic scenes for: {prompt}"
+        ).text.split("\n")
+
+        clips = []
+
+        for i, scene in enumerate(scenes[:3]):
+            url = f"https://image.pollinations.ai/prompt/{scene}"
+            img_path = f"scene_{i}.png"
+
+            with open(img_path, "wb") as f:
+                f.write(requests.get(url).content)
+
+            image_clip = ImageClip(img_path).set_duration(2).resize((720,1280))
+
+            text_clip = TextClip(scene[:40], fontsize=40, color='white', size=(700,200))
+            text_clip = text_clip.set_position(("center","bottom")).set_duration(2)
+
+            final = CompositeVideoClip([image_clip, text_clip])
+            clips.append(final.fadein(0.5).fadeout(0.5))
+
+            st.image(img_path, caption=scene)
+
+        video = concatenate_videoclips(clips)
+        video.write_videofile("final.mp4", fps=24)
+
+        st.video("final.mp4")
+
+        with open("final.mp4", "rb") as f:
+            st.download_button("Download Video", f)
+
+# -------------------------------
+# 5. CAPTION
+# -------------------------------
+elif menu == "Caption + Hashtags":
+    prompt = st.text_input("Enter topic")
+
+    if st.button("Generate"):
+        res = model.generate_content(
+            f"Generate YouTube title, description and comma-separated tags for: {prompt}"
+        )
+        st.write(res.text)
+
+# -------------------------------
+# 6. HOOK
+# -------------------------------
+elif menu == "Hook Generator":
+    prompt = st.text_input("Enter topic")
+
+    if st.button("Generate Hooks"):
+        res = model.generate_content(
+            f"Generate 5 viral hooks for: {prompt}"
+        )
+        st.write(res.text)
