@@ -1,6 +1,7 @@
 streamlit
-moviepy
-imageio[ffmpeg]
+moviepy==1.0.3
+imageio
+imageio-ffmpeg
 google-generativeai
 Pillow
 requests
