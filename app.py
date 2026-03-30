@@ -10,7 +10,7 @@ genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 model = genai.GenerativeModel("gemini-1.5-flash")
 
 st.set_page_config(page_title="Divine Rap AI Studio", layout="wide")
-st.title("🎤 Divine Rap AI Content Factory (Ultra Version)")
+st.title("🎤 Divine Rap AI Content Factory (Final Stable)")
 
 menu = st.sidebar.selectbox("Choose Tool", [
     "Script Generator",
@@ -22,19 +22,17 @@ menu = st.sidebar.selectbox("Choose Tool", [
 ])
 
 # -------------------------------
-# 1. SCRIPT GENERATOR
+# SCRIPT
 # -------------------------------
 if menu == "Script Generator":
     prompt = st.text_input("Enter topic")
 
     if st.button("Generate Script"):
-        res = model.generate_content(
-            f"Write a powerful devotional rap lyrics on: {prompt}"
-        )
+        res = model.generate_content(f"Write devotional rap lyrics on: {prompt}")
         st.write(res.text)
 
 # -------------------------------
-# 2. IMAGE GENERATOR (2K / 4K)
+# IMAGE GENERATOR
 # -------------------------------
 elif menu == "Image Generator":
     prompt = st.text_input("Enter image idea")
@@ -44,40 +42,96 @@ elif menu == "Image Generator":
 
     if st.button("Generate Image"):
         url = f"https://image.pollinations.ai/prompt/{prompt}"
-        response = requests.get(url)
-        img = Image.open(BytesIO(response.content))
+        img = Image.open(BytesIO(requests.get(url).content))
 
-        # Resolution logic
         if ratio == "9:16":
-            if quality == "HD":
-                size = (720,1280)
-            elif quality == "2K":
-                size = (1440,2560)
-            else:
-                size = (2160,3840)
-
+            size = (720,1280) if quality=="HD" else (1440,2560) if quality=="2K" else (2160,3840)
         elif ratio == "16:9":
-            if quality == "HD":
-                size = (1280,720)
-            elif quality == "2K":
-                size = (2560,1440)
-            else:
-                size = (3840,2160)
-
+            size = (1280,720) if quality=="HD" else (2560,1440) if quality=="2K" else (3840,2160)
         else:
             size = (1024,1024)
 
         img = img.resize(size)
 
-        st.image(img, caption=f"{ratio} - {quality}")
+        st.image(img)
+        img.save("image.png")
 
-        img.save("generated.png")
-        with open("generated.png", "rb") as f:
-            st.download_button("Download Image", f, file_name="image.png")
+        with open("image.png", "rb") as f:
+            st.download_button("Download Image", f)
 
 # -------------------------------
-# 3. VIDEO BUILDER
+# VIDEO BUILDER
 # -------------------------------
+elif menu == "Video Builder":
+    images = st.file_uploader("Upload images", accept_multiple_files=True)
+
+    if st.button("Create Video") and images:
+        files = []
+
+        for i, img in enumerate(images):
+            name = f"img_{i}.png"
+            with open(name, "wb") as f:
+                f.write(img.read())
+            files.append(name)
+
+        clips = [ImageClip(f).set_duration(2).resize((720,1280)) for f in files]
+        video = concatenate_videoclips(clips)
+
+        video.write_videofile("video.mp4", fps=24)
+        st.video("video.mp4")
+
+# -------------------------------
+# TEXT → VIDEO
+# -------------------------------
+elif menu == "Text → Video":
+    prompt = st.text_input("Enter idea")
+
+    if st.button("Generate Video"):
+        scenes = model.generate_content(
+            f"Create 3 cinematic scenes for: {prompt}"
+        ).text.split("\n")
+
+        files = []
+
+        for i, scene in enumerate(scenes[:3]):
+            url = f"https://image.pollinations.ai/prompt/{scene}"
+            name = f"scene_{i}.png"
+
+            with open(name, "wb") as f:
+                f.write(requests.get(url).content)
+
+            files.append(name)
+            st.image(name, caption=scene)
+
+        clips = [ImageClip(f).set_duration(2).resize((720,1280)) for f in files]
+        video = concatenate_videoclips(clips)
+
+        video.write_videofile("final.mp4", fps=24)
+        st.video("final.mp4")
+
+# -------------------------------
+# CAPTION
+# -------------------------------
+elif menu == "Caption + Hashtags":
+    prompt = st.text_input("Enter topic")
+
+    if st.button("Generate"):
+        res = model.generate_content(
+            f"Generate YouTube title, description and comma-separated tags for: {prompt}"
+        )
+        st.write(res.text)
+
+# -------------------------------
+# HOOK
+# -------------------------------
+elif menu == "Hook Generator":
+    prompt = st.text_input("Enter topic")
+
+    if st.button("Generate Hooks"):
+        res = model.generate_content(
+            f"Generate 5 viral hooks for: {prompt}"
+        )
+        st.write(res.text)# -------------------------------
 elif menu == "Video Builder":
     images = st.file_uploader("Upload images", accept_multiple_files=True)
 
