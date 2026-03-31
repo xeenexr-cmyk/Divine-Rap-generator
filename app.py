@@ -5,95 +5,73 @@ from groq import Groq
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
 # UI Setup
-st.set_page_config(page_title="Divine Rap Studio v5.0", page_icon="🔱", layout="wide")
+st.set_page_config(page_title="Divine Rap Studio v6.0", page_icon="🔱", layout="wide")
 
-# Dark Aesthetic CSS
 st.markdown("""
     <style>
-    .stApp { background-color: #080a0f; color: #ffffff; }
-    .stButton>button { width: 100%; border-radius: 12px; background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%); color: white; font-weight: bold; height: 3.5em; border: none; font-size: 20px; transition: 0.3s; }
-    .stButton>button:hover { transform: scale(1.02); box-shadow: 0px 0px 15px #2575fc; }
-    .stTextInput>div>div>input { background-color: #121620; color: #00ffcc; border: 1px solid #30363d; border-radius: 10px; padding: 15px; }
-    .stTextArea>div>div>textarea { background-color: #0d1117; color: #f0f6fc; font-family: 'Consolas', monospace; border: 1px solid #444; font-size: 16px; line-height: 1.6; }
+    .stApp { background-color: #030508; color: #ffffff; }
+    .stButton>button { width: 100%; border-radius: 5px; background: #ff0000; color: white; font-weight: bold; height: 3.5em; border: none; font-size: 1.2rem; }
+    .stTextInput input { background-color: #10141b; color: #ff3e3e; border: 1px solid #333; }
     </style>
     """, unsafe_allow_html=True)
 
-st.title("🔱 Divine Rap Studio v5.0 (The Viral Engine)")
-st.write("### DivineRapTv: जहाँ भक्ति और हिप-हॉप का 'Tandav' होता है।")
+st.title("🔱 Divine Rap Studio v6.0 (The Beast Mode)")
+st.write("### DivineRapTv: शब्दों से 'Tandav' शुरू करो")
 
 col1, col2 = st.columns([1, 1.3])
 
 with col1:
-    topic = st.text_input("🎯 रैप का विषय (Topic)", placeholder="जैसे: श्मशान का राजा, काल का काल महाकाल")
-    
-    mode = st.selectbox("🎭 वाइब और फ्लो (Flow)", [
-        "Hardcore Aggressive (Fast Tempo/Raftaar Style)",
-        "Dark & Mystical (Slow/Deep/Aghori Vibe)",
-        "Cinematic Storytelling (Narrative/Epic)",
-        "Modern Melodic (Autotune/Soulful)"
-    ])
-    
-    include_music = st.checkbox("🎵 म्यूजिक प्रोडक्शन नोट्स (BPM, Bass, Beats)", value=True)
+    topic = st.text_input("🎯 विषय (Topic)", placeholder="जैसे: कालभैरव अष्टमी, रावण का अहंकार")
+    mode = st.selectbox("🎭 फ्लो चुनें", ["Ultra-Aggressive", "Dark Narrative", "Fast-Paced Chopper"])
     st.divider()
-    generate_btn = st.button("🔥 GENERATE TRACK")
+    generate_btn = st.button("🚀 UNLEASH THE BEAST")
 
-def build_viral_prompt(topic, mode, include_music):
+def build_beast_prompt(topic, mode):
     return f"""
-तुम एक 'Underground Rap Legend' हो जो भगवानों पर 'Aggressive Divine Rap' लिखता है। 
-तुम्हारा काम 'DivineRapTv' के लिए ऐसा गाना लिखना है जो YouTube पर तहलका मचा दे।
+तुम दुनिया के सबसे खतरनाक 'Vedic Rap Ghostwriter' हो। तुम्हें 'DivineRapTv' के लिए लिरिक्स लिखने हैं।
 
 🎯 TOPIC: {topic}
-🎭 FLOW: {mode}
+🎭 VIBE: {mode}
 
-❌ ये कभी मत लिखना (STRICT FORBIDDEN):
-- 'मैं भक्ति में खोया हूँ', 'शिव महान हैं', 'प्रणाम करता हूँ' - ये सब हटाओ! ये रैप है, भजन नहीं।
-- 'गया हूँ', 'रहा हूँ' जैसी कमज़ोर तुकबंदी (Rhymes) बैन है।
+STRICT RULES (ये नहीं माना तो फेल):
+1. **NO REPETITION:** Verse 1 और Verse 2 की लाइनें एकदम अलग होनी चाहिए। एक ही शब्द को बार-बार मत दोहराओ।
+2. **INTERNAL RHYMES:** हर लाइन के बीच में राइम लाओ। 
+   *उदाहरण: "सिर पर **ताज**, हाथ में **राज**, गूँजेगी **आवाज़** आज।"*
+3. **HEAVY VOCABULARY:** 'भक्ति' की जगह 'शक्ति', 'मुक्ति', 'रक्त', 'तांडव', 'विकराल', 'महाकाल', 'दिगंबर', 'अट्टहास' जैसे शब्दों का प्रयोग करो।
+4. **CHOPPER FLOW:** लाइनें छोटी और पावरफुल होनी चाहिए (8-10 शब्द मैक्स)।
+5. **POETIC DEVICES:** Metaphors का इस्तेमाल करो। शिव को 'मौत का बाप' या 'शून्य का शोर' बोलो।
 
-✅ ये ज़रूर करना (MUST DO):
-1. **Multisyllabic Rhymes:** अंत में 'विनाश-आकाश' की जगह 'विनाश-अट्टहास' या 'विकराल-काल-कपाल' जैसे शब्दों का प्रयोग करो।
-2. **Internal Rhyming:** लाइन के बीच में भी शब्दों को मैच करो (जैसे: "हाथ में **त्रिशूल**, जो करे पाप **निर्मूल**")।
-3. **Aggressive Metaphors:** शिव को 'अघोरी', 'काल का अंत', 'शून्य का शोर' जैसे विशेषणों से बुलाओ।
-4. **Hinglish Touch:** जहाँ ज़रूरी हो, थोड़े 'Cool' शब्द यूज़ करो (जैसे: 'Beat', 'Vibe', 'Legend', 'Flow', 'Game')।
-5. **Beat Alignment:** हर लाइन में 8-10 शब्द ही हों ताकि रैपर को सांस लेने की जगह मिले।
-
-📌 FORMAT:
-[Intro] (गहरा और सस्पेंस भरा)
-[Verse 1] (तेज़ रफ़्तार, भारी पंचलाइन्स)
-[Hook 🔥] (4 लाइन्स - सबसे Catchy, Viral Material)
-[Verse 2] (कहानी और गहरी बातें)
+📌 STRUCTURE:
+[Intro] (एक डरावना मंत्र या भारी डायलॉग)
+[Verse 1] (तेज़ रफ्तार प्रहार - 8 lines)
+[Hook 🔥] (4 lines - सबसे अलग और सबसे Catchy)
+[Verse 2] (पूरी तरह अलग शब्द, और भी गहरा और Aggressive - 8 lines)
 [Outro] (धमाकेदार अंत)
 
-{ "अंत में म्यूजिक गाइड दें: BPM (100-140), Beat Type (Trap/Boom-bap), और Instruments (Dark Flute, Heavy Bass)." if include_music else "" }
+यहाँ से लिखना शुरू करो (केवल लिरिक्स):
 """
 
 if generate_btn:
     if not topic:
-        st.warning("महादेव! बिना टॉपिक के शब्द कैसे आएंगे?")
+        st.error("टॉपिक डालिए!")
     else:
-        with st.spinner("⏳ शब्दों का तांडव शुरू हो रहा है..."):
+        with st.spinner("🔥 श्मशान की राख से शब्द चुने जा रहे हैं..."):
             try:
-                # Temperature 0.90 सबसे बेस्ट है रैप के लिए
+                # Temperature 1.2 - ताकि AI हर बार एकदम नए और अलग शब्द लाए
                 response = client.chat.completions.create(
                     model="llama-3.3-70b-versatile",
                     messages=[
-                        {"role": "system", "content": "तुम एक प्रोफेशनल रैप राइटर हो। तुम्हारा स्टाइल बहुत ही Aggressive और Modern है।"},
-                        {"role": "user", "content": build_viral_prompt(topic, mode, include_music)}
+                        {"role": "system", "content": "तुम एक ऐसे रैपर हो जिसके शब्द आग उगलते हैं। तुम साधारण शब्द इस्तेमाल नहीं करते।"},
+                        {"role": "user", "content": build_beast_prompt(topic, mode)}
                     ],
-                    temperature=0.9,
-                    max_tokens=2000
+                    temperature=1.2, 
+                    max_tokens=2500
                 )
 
-                final_lyrics = response.choices[0].message.content
-                
+                lyrics = response.choices[0].message.content
                 with col2:
-                    st.success("✅ ट्रैक तैयार है! अब आग लगा दो!")
-                    st.markdown("### 🎤 Final Lyrics & Beat Guide")
-                    st.text_area(label="Official Script", value=final_lyrics, height=700)
-                    
-                    st.info("💡 Pro Tip: Hook वाली लाइन्स को गाने में कम से कम 3 बार रिपीट करें ताकि वो लोगों के दिमाग में बैठ जाए।")
-                
+                    st.success("✅ तांडव शुरू!")
+                    st.text_area(label="Official DivineRapTv Lyrics", value=lyrics, height=750)
             except Exception as e:
-                st.error(f"❌ Error: {e}")
-
-st.divider()
-st.caption("Produced for DivineRapTv | © 2026 The Ultimate Rap Studio")
+                st.error(f"Error: {e}")
+                
