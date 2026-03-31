@@ -1,85 +1,92 @@
 import streamlit as st
 from groq import Groq
 
-st.set_page_config(page_title="AI Lyrics Pro", layout="centered")
+st.set_page_config(page_title="Divine AI Content Factory", layout="centered")
 
-st.title("🔥 Bollywood Level AI Lyrics Generator 🎤")
+st.title("🔥 Divine AI Content Factory (Hindi Pro MAX) 🎤")
 
-topic = st.text_input("Enter Topic (e.g. Shiv Tandav, Lanka Dahan)")
-style = st.selectbox("Select Style", ["Rap", "Bollywood", "Devotional Rap"])
-mood = st.selectbox("Select Mood", ["Aggressive", "Emotional", "Powerful", "Peaceful"])
+# ================= INPUT =================
+topic = st.text_input("🎯 विषय लिखें (जैसे: शिव तांडव, लंका दहन)")
 
-if st.button("Generate Lyrics"):
+style = st.selectbox("🎵 शैली चुनें", ["रैप", "बॉलीवुड", "भक्ति रैप"])
 
-    if topic:
-        try:
-            client = Groq(api_key=st.secrets["GROQ_API_KEY"])
+mood = st.selectbox("🔥 मूड चुनें", ["आक्रामक", "भावनात्मक", "प्रेरणादायक"])
 
-            # 🔥 MASTER PROMPT (ChatGPT Level)
-            prompt = f"""
-You are a TOP Bollywood lyricist + Rap writer.
+keywords = st.text_input("🧠 कीवर्ड (optional)", placeholder="जैसे: अग्नि, काल, शक्ति")
 
-Write a HIGH QUALITY Hindi {style} song.
+# ================= GENERATE =================
+if st.button("🚀 पूरा गाना बनाओ"):
 
-Topic: {topic}
-Mood: {mood}
+    client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
-STRICT RULES:
-- No explanation, ONLY lyrics
-- No repetition
-- No boring lines
-- No music description
-- Every line should feel powerful and meaningful
+    prompt = f"""
+तुम एक महान बॉलीवुड गीतकार और रैप लेखक हो।
 
-STYLE:
-- Use Hindi + Hinglish mix
-- Use internal rhymes (rap style)
-- Add punchlines
-- Add cinematic feel
+तुम्हारा काम है एक उच्च स्तर का हिन्दी गीत लिखना।
 
-STRUCTURE:
+विषय: {topic}
+शैली: {style}
+मूड: {mood}
+कीवर्ड: {keywords}
 
-[Intro]
-(2 impactful lines)
+🔴 सख्त नियम:
+- पूरा गीत केवल शुद्ध हिन्दी (देवनागरी) में हो
+- कोई अंग्रेज़ी या हिंग्लिश शब्द नहीं
+- हर पंक्ति प्रभावशाली और भावपूर्ण हो
+- कोई भी लाइन साधारण या दोहराई हुई न हो
 
-[Verse 1]
-(4-6 lines, storytelling, deep imagery)
+🎯 लक्ष्य:
+- ऐसा लगे जैसे असली फिल्म का गाना है
+- सुनते ही रोंगटे खड़े हो जाएं
+- हुक (Hook) वायरल होने लायक हो
 
-[Hook]
-(2-3 lines, VERY catchy, viral level)
+🎬 लेखन शैली:
+- रूपक का उपयोग (अग्नि, काल, आकाश, आत्मा, विनाश, सृजन)
+- गहराई और भावना हो
+- रैप में punchlines हो
+- सिनेमैटिक feel हो
 
-[Verse 2]
-(4-6 lines, more powerful than verse 1)
+📌 संरचना:
 
-[Hook]
-(repeat but stronger)
+[इंट्रो]
+2 पंक्तियाँ (गहरी और रहस्यमयी शुरुआत)
 
-[Outro]
-(2 emotional lines)
+[अंतरा 1]
+5 पंक्तियाँ (कहानी + build up)
 
-IMPORTANT:
-- Hook should feel like a viral reel
-- Lines should feel like real song, not AI
-- Add divine + powerful imagery
+[हुक]
+3 पंक्तियाँ (बहुत catchy + viral)
 
-Make it goosebumps level 🔥
+[अंतरा 2]
+5 पंक्तियाँ (और intense + powerful)
+
+[हुक]
+(पहले से बेहतर impact)
+
+[आउट्रो]
+2 पंक्तियाँ (भावनात्मक समापन)
+
+⚡ विशेष:
+- हुक ऐसा हो जो reels/shorts में viral हो सके
+- हर लाइन cinematic लगे
+
+अब एक शानदार गीत लिखो।
 """
 
-            response = client.chat.completions.create(
-                model="llama-3.3-70b-versatile",
-                messages=[{"role": "user", "content": prompt}],
-                temperature=1.2  # 🔥 creativity boost
-            )
+    try:
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=1.4
+        )
 
-            output = response.choices[0].message.content
+        lyrics = response.choices[0].message.content
 
-            st.success("✅ Lyrics Generated Successfully!")
+        st.success("✅ गाना तैयार हो गया!")
 
-            # Better formatting
-            st.markdown(f"```\n{output}\n```")
+        st.markdown("### 🎤 Generated Lyrics:")
+        st.write(lyrics)
 
-        except Exception as e:
-            st.error(f"❌ Error: {e}")
-
-    else:
-        st.warning("⚠️ Enter topic first")
+    except Exception as e:
+        st.error("❌ Error आया:")
+        st.write(e)
