@@ -2,7 +2,7 @@ import streamlit as st
 import google.generativeai as genai
 import time
 
-# API setup - Use Gemini with correct model
+# API setup - Use Gemini with latest model
 genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
 # Page config
@@ -87,7 +87,7 @@ st.markdown("""
     <div class="final-title">DivineRapTv - Shiv Tandav Master Engine</div>
     <p style="color: #ffaa44;">शिव तांडव स्टाइल | चांट + रैप + हुक + क्लाइमेक्स | परफेक्ट फ्लो</p>
     <p style="color: #ff8866;">इंट्रो चांट | स्लो बिल्ड रैप | पावरफुल हुक | हार्ड रैप | क्लाइमेक्स | आउट्रो चांट</p>
-    <p style="color: #44ff44; font-size: 0.8rem;">जेमिनी एपीआई - 60 रिक्वेस्ट/मिनट | कोई रेट लिमिट इश्यू नहीं</p>
+    <p style="color: #44ff44; font-size: 0.8rem;">जेमिनी 1.5 फ्लैश | 60 रिक्वेस्ट/मिनट | कोई रेट लिमिट इश्यू नहीं</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -179,7 +179,7 @@ STYLES = {
     }
 }
 
-# ==================== PROMPT BUILDER WITH HINDI EXAMPLE ====================
+# ==================== PROMPT BUILDER ====================
 def build_prompt(style, topic, mood, length):
     
     style_data = STYLES[style]
@@ -244,23 +244,37 @@ def build_prompt(style, topic, mood, length):
 शुरू करो:
 """
 
-# ==================== GENERATE FUNCTION WITH CORRECT MODEL ====================
+# ==================== GENERATE FUNCTION WITH LATEST MODEL ====================
 def generate_rap(style, topic, mood, length):
     try:
-        # Use correct model name - gemini-pro for text generation
-        model = genai.GenerativeModel('gemini-pro')
+        # Latest Model Name: 'gemini-1.5-flash' (fast and efficient)
+        # Alternative: 'gemini-1.5-pro' (more powerful but slower)
+        model = genai.GenerativeModel('gemini-1.5-flash')
+        
+        # Generation config for creative lyrics
+        generation_config = {
+            "temperature": 1.0,        # Higher for creative rap
+            "top_p": 0.95,
+            "top_k": 40,
+            "max_output_tokens": 4096,
+        }
         
         response = model.generate_content(
             build_prompt(style, topic, mood, length),
-            generation_config={
-                "temperature": 0.85,
-                "max_output_tokens": 3000,
-            }
+            generation_config=generation_config
         )
         
-        return response.text
+        if response.text:
+            return response.text
+        else:
+            return "Error: AI ने कोई रिस्पॉन्स नहीं दिया। दोबारा कोशिश करें।"
+            
     except Exception as e:
-        return f"Error: {str(e)}"
+        error_msg = str(e)
+        if "404" in error_msg:
+            return f"Error: Model not found. {error_msg}\n\nTip: Check if GEMINI_API_KEY is correct and model 'gemini-1.5-flash' is available."
+        else:
+            return f"Error: {error_msg}"
 
 # ==================== UI LAYOUT ====================
 col1, col2 = st.columns([1, 1.5])
@@ -307,7 +321,7 @@ with col2:
         if not topic:
             st.error("कृपया पहले रैप टॉपिक डालें!")
         else:
-            with st.spinner(f"{style} में परफेक्ट रैप लिखा जा रहा है... (जेमिनी एपीआई)"):
+            with st.spinner(f"{style} में परफेक्ट रैप लिखा जा रहा है... (जेमिनी 1.5 फ्लैश)"):
                 result = generate_rap(style, topic, mood, length)
                 
                 if "Error" not in result:
@@ -409,7 +423,7 @@ st.markdown("---")
 st.markdown("""
 <div style="text-align: center; padding: 1rem;">
     <p style="color: #ff8844;">DivineRapTv - Shiv Tandav Master Engine</p>
-    <p style="color: #ffaa66;">जेमिनी एपीआई | 60 रिक्वेस्ट/मिनट | कोई रेट लिमिट इश्यू नहीं</p>
+    <p style="color: #ffaa66;">जेमिनी 1.5 फ्लैश | 60 रिक्वेस्ट/मिनट | कोई रेट लिमिट इश्यू नहीं</p>
     <p style="color: #ff8866;">परफेक्ट उदाहरण के साथ | एआई बिल्कुल वैसा ही लिखेगा</p>
 </div>
 """, unsafe_allow_html=True)
