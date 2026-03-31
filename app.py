@@ -2,7 +2,7 @@ import streamlit as st
 import google.generativeai as genai
 import time
 
-# API setup - Use Gemini
+# API setup - Use Gemini with correct model
 genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
 # Page config
@@ -145,8 +145,8 @@ PERFECT_EXAMPLE_HINDI = '''
 महाकाल के आगे सब शीश झुके
 
 [आउट्रो - फाइनल चांट फुल पावर]
-हर हर महादेव 🔱
-हर हर महादेव 🔱
+हर हर महादेव
+हर हर महादेव
 ॐ नमः शिवाय...
 '''
 
@@ -244,10 +244,11 @@ def build_prompt(style, topic, mood, length):
 शुरू करो:
 """
 
-# ==================== GENERATE FUNCTION ====================
+# ==================== GENERATE FUNCTION WITH CORRECT MODEL ====================
 def generate_rap(style, topic, mood, length):
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        # Use correct model name - gemini-pro for text generation
+        model = genai.GenerativeModel('gemini-pro')
         
         response = model.generate_content(
             build_prompt(style, topic, mood, length),
@@ -269,7 +270,7 @@ with col1:
     st.markdown("### रैप टॉपिक")
     topic = st.text_input(
         "",
-        placeholder="उदाहरण: हनुमान बाल कांड, शिव तांडव, माँ दुर्गा महिषासुर, रामायण युद्ध",
+        placeholder="उदाहरण: शिव तांडव, हनुमान बाल कांड, माँ दुर्गा महिषासुर",
         key="topic_input"
     )
     
