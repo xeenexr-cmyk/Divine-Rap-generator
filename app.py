@@ -1,33 +1,46 @@
 import streamlit as st
-import google.generativeai as genai
+from groq import Groq
 
-st.set_page_config(page_title="AI Lyrics", layout="centered")
+st.set_page_config(page_title="Bollywood AI Lyrics", layout="centered")
 
-# API KEY
-genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+st.title("🔥 Bollywood Level AI Lyrics Generator 🎤")
 
-st.title("🎤 AI Lyrics Generator (Working 🔥)")
-
-topic = st.text_input("Enter Topic")
+topic = st.text_input("Enter Topic (e.g. Shiv Tandav, Lanka Dahan)")
+style = st.selectbox("Select Style", ["Rap", "Bollywood", "Devotional Rap"])
+mood = st.selectbox("Select Mood", ["Aggressive", "Emotional", "Powerful", "Peaceful"])
 
 if st.button("Generate Lyrics"):
 
     if topic:
         try:
-            model = genai.GenerativeModel("gemini-pro")
+            client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
             prompt = f"""
-            Write a Hindi rap song on topic: {topic}
+            Write a HIGH QUALITY Hindi {style} song.
 
-            - Good rhyming
-            - No repetition
-            - Emotional + powerful
+            Topic: {topic}
+            Mood: {mood}
+
+            Requirements:
+            - Full Bollywood level lyrics
+            - Proper structure: Intro, Verse 1, Hook, Verse 2, Hook, Outro
+            - Deep meaning, storytelling
+            - Strong rhyming (like real songs)
+            - NO repetition
+            - Pure Hindi + Hinglish mix
+
+            Make it emotional and impactful like a real viral song.
             """
 
-            response = model.generate_content(prompt)
+            response = client.chat.completions.create(
+                model="llama3-70b-8192",
+                messages=[{"role": "user", "content": prompt}]
+            )
+
+            output = response.choices[0].message.content
 
             st.success("✅ Lyrics Generated")
-            st.write(response.text)
+            st.write(output)
 
         except Exception as e:
             st.error(f"Error: {e}")
