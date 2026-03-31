@@ -3,124 +3,134 @@ from groq import Groq
 
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
-st.set_page_config(page_title="DivineRapTv FINAL ENGINE", layout="wide")
+st.set_page_config(page_title="DivineRapTv 10/10 Engine", layout="wide")
 
-st.title("🔱 DivineRapTv - PERFECT RAP ENGINE 🔥")
+st.title("🔱 DivineRapTv - ULTIMATE 10/10 RAP ENGINE 🔥")
 
 # INPUT
 topic = st.text_input("🎯 Topic", placeholder="जैसे: लंका दहन, शिव तांडव")
 style = st.selectbox("🎭 Style", ["Hardcore 🔥", "Emotional 💔", "Bhakti 🙏"])
 
-generate = st.button("🚀 Generate PERFECT Song")
+generate = st.button("🚀 Generate 10/10 Song")
 
-# ================= MASTER PROMPT =================
-def build_perfect_prompt(topic, style):
+# ================= STEP 1 =================
+def build_prompt(topic, style):
     return f"""
-तुम AI नहीं हो।
-तुम एक PROFESSIONAL RAP GHOSTWRITER हो।
-
-❗ अगर format टूटा → output गलत माना जाएगा
-
----
+तुम भारत के सबसे खतरनाक Divine Rap Ghostwriter हो।
 
 🎯 TOPIC: {topic}
 🎭 STYLE: {style}
 
----
+❗ RULES:
 
-🔥 STRICT RULES (MANDATORY):
+- हर लाइन = 4-6 शब्द
+- हर 2 लाइन = SAME RHYME
+- कोई भी line boring नहीं
+- कोई भी line repeat नहीं
+- "है/हूँ/था" नहीं
 
-1. हर लाइन = EXACT 4-6 शब्द
-2. हर 2 लाइन = SAME END RHYME
-3. कोई भी लाइन sentence नहीं
-4. हर लाइन = punchline
-5. "है / हूँ / था" बिल्कुल नहीं
-6. कोई भी लाइन repeat नहीं
-
----
-
-🔥 FORMAT LOCK (BREAK मत करना):
+FORMAT:
 
 अग्नि का जाल, मृत्यु का जाल  
 क्रोध का काल, विनाश का काल  
 
-शक्ति का वार, प्रलय की धार  
-भस्म का सार, महाकाल प्रहार  
+STRUCTURE:
 
----
-
-🔥 HOOK (MANDATORY):
-
-- 3 लाइन
-- chant style
-- repeatable
-
-Example:
-जय महाकाल, जय महाकाल  
-भस्म में काल, जय महाकाल  
-हर हर महादेव, महाकाल  
-
----
-
-🔥 STRUCTURE:
-
-[Intro]
-(2 lines only)
-
-[Verse 1]
-(16 lines → 8 rhyme pairs)
-
+[Intro] (2 lines)
+[Verse 1] (16 lines)
+[Hook] (3 lines)
+[Verse 2] (16 lines)
 [Hook]
-(3 lines)
+[Outro] (2 lines)
 
-[Verse 2]
-(16 lines)
+अब लिखो:
+"""
 
-[Hook]
+# ================= STEP 2 =================
+def refine_prompt(raw):
+    return f"""
+इन lyrics को सुधारो:
 
-[Outro]
-(2 lines)
+{raw}
 
----
+RULE:
+- rhyme perfect करो
+- lines short रखो
+- punchlines बढ़ाओ
+- weak lines हटाओ
 
-🔥 FINAL WARNING:
+Final improved lyrics:
+"""
 
-- अगर rhyme टूटा → गलत
-- अगर लाइन लंबी → गलत
-- अगर boring → गलत
+# ================= STEP 3 =================
+def validate_prompt(refined):
+    return f"""
+इन lyrics को FINAL CHECK करो:
 
----
+{refined}
 
-अब EXACT इसी format में लिखो:
+❗ CHECK:
+
+- कोई repetition नहीं
+- हर line strong हो
+- hook viral हो
+
+HOOK FIX:
+Hook को chant + powerful बनाओ
+
+FINAL VERSION दो:
 """
 
 # ================= GENERATION =================
 def generate_song(topic, style):
-    response = client.chat.completions.create(
+    # Step 1
+    raw = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
         messages=[
-            {"role": "system", "content": "तुम strict rap generator हो जो format कभी नहीं तोड़ता"},
-            {"role": "user", "content": build_perfect_prompt(topic, style)}
+            {"role": "system", "content": "तुम raw rap writer हो"},
+            {"role": "user", "content": build_prompt(topic, style)}
         ],
-        temperature=0.7,   # lower = more control
-        max_tokens=1500,
-        top_p=0.85
-    )
-    return response.choices[0].message.content
+        temperature=0.8,
+        max_tokens=1200
+    ).choices[0].message.content
+
+    # Step 2
+    refined = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[
+            {"role": "system", "content": "तुम lyrics improver हो"},
+            {"role": "user", "content": refine_prompt(raw)}
+        ],
+        temperature=0.7,
+        max_tokens=1200
+    ).choices[0].message.content
+
+    # Step 3 (FINAL MAGIC)
+    final = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[
+            {"role": "system", "content": "तुम viral rap doctor हो"},
+            {"role": "user", "content": validate_prompt(refined)}
+        ],
+        temperature=0.6,
+        max_tokens=1200
+    ).choices[0].message.content
+
+    return final
 
 # ================= OUTPUT =================
 if generate:
     if not topic:
-        st.error("⚠️ Topic डालो")
+        st.error("⚠️ Topic डालो पहले")
     else:
-        with st.spinner("🔥 PERFECT lyrics बन रहे हैं..."):
+        with st.spinner("🔥 10/10 MASTERPIECE बन रहा है..."):
             lyrics = generate_song(topic, style)
 
-            st.success("✅ PERFECT SONG READY 🔥")
-            st.text_area("🎤 Lyrics", lyrics, height=600)
+            st.success("✅ 10/10 SONG READY 🔥")
+            st.text_area("🎤 Final Lyrics", lyrics, height=600)
 
             st.download_button(
-                "📥 Download Lyrics",
+                "📥 Download",
                 lyrics,
-                file_name="perfect_rap.txt"
+                file_name="ultimate_rap.txt"
             )
