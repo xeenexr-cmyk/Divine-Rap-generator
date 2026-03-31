@@ -1,69 +1,85 @@
 import streamlit as st
 from groq import Groq
 
-# Page setup
-st.set_page_config(page_title="Bollywood AI Lyrics", layout="centered")
+st.set_page_config(page_title="AI Lyrics Pro", layout="centered")
 
 st.title("🔥 Bollywood Level AI Lyrics Generator 🎤")
 
-# Inputs
 topic = st.text_input("Enter Topic (e.g. Shiv Tandav, Lanka Dahan)")
 style = st.selectbox("Select Style", ["Rap", "Bollywood", "Devotional Rap"])
 mood = st.selectbox("Select Mood", ["Aggressive", "Emotional", "Powerful", "Peaceful"])
 
-# Button
 if st.button("Generate Lyrics"):
 
     if topic:
         try:
-            # API client
             client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
-            # 🔥 PRO LEVEL PROMPT
+            # 🔥 MASTER PROMPT (ChatGPT Level)
             prompt = f"""
-            तुम एक professional Bollywood lyricist हो।
+You are a TOP Bollywood lyricist + Rap writer.
 
-            Topic: {topic}
-            Style: {style}
-            Mood: {mood}
+Write a HIGH QUALITY Hindi {style} song.
 
-            Instructions:
-            - Pure Hindi + Hinglish mix
-            - Emotional, cinematic, powerful lyrics
-            - Strong rhyming + smooth rap flow
-            - No repetition
-            - No music description (like Music: ...)
+Topic: {topic}
+Mood: {mood}
 
-            Structure:
-            🎤 Intro (2-3 lines, impactful)
-            🎶 Verse 1 (deep storytelling, 4-6 lines)
-            🔥 Hook (catchy, viral, repeatable)
-            🎶 Verse 2 (more powerful than verse 1)
-            🔥 Hook
-            ✨ Outro (short emotional ending)
+STRICT RULES:
+- No explanation, ONLY lyrics
+- No repetition
+- No boring lines
+- No music description
+- Every line should feel powerful and meaningful
 
-            Extra:
-            - Use metaphors, divine imagery
-            - Add punchlines and goosebumps feeling
+STYLE:
+- Use Hindi + Hinglish mix
+- Use internal rhymes (rap style)
+- Add punchlines
+- Add cinematic feel
 
-            Make it feel like a viral YouTube devotional rap song.
-            """
+STRUCTURE:
 
-            # API call
+[Intro]
+(2 impactful lines)
+
+[Verse 1]
+(4-6 lines, storytelling, deep imagery)
+
+[Hook]
+(2-3 lines, VERY catchy, viral level)
+
+[Verse 2]
+(4-6 lines, more powerful than verse 1)
+
+[Hook]
+(repeat but stronger)
+
+[Outro]
+(2 emotional lines)
+
+IMPORTANT:
+- Hook should feel like a viral reel
+- Lines should feel like real song, not AI
+- Add divine + powerful imagery
+
+Make it goosebumps level 🔥
+"""
+
             response = client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
-                messages=[
-                    {"role": "user", "content": prompt}
-                ]
+                messages=[{"role": "user", "content": prompt}],
+                temperature=1.2  # 🔥 creativity boost
             )
 
             output = response.choices[0].message.content
 
             st.success("✅ Lyrics Generated Successfully!")
-            st.write(output)
+
+            # Better formatting
+            st.markdown(f"```\n{output}\n```")
 
         except Exception as e:
             st.error(f"❌ Error: {e}")
 
     else:
-        st.warning("⚠️ Please enter a topic first")
+        st.warning("⚠️ Enter topic first")
