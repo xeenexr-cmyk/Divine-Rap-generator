@@ -6,10 +6,10 @@ from io import BytesIO
 import moviepy.editor as mp
 
 st.set_page_config(page_title="Divine Rap AI Factory", layout="wide")
-st.title("🎤 Divine Rap AI Content Factory (Bollywood Pro 🔥)")
+st.title("🎤 Divine Rap AI Content Factory (Creator Control 🔥)")
 
 menu = st.sidebar.selectbox("Choose Tool", [
-    "Bollywood Song Generator",
+    "Smart Rap Generator",
     "Hook Generator",
     "Caption + Hashtags",
     "Image Generator",
@@ -18,78 +18,69 @@ menu = st.sidebar.selectbox("Choose Tool", [
 ])
 
 # -------------------------------
-# 🎤 BOLLYWOOD SONG GENERATOR
+# 🔥 SMART RAP GENERATOR
 # -------------------------------
-def generate_song(topic, style):
-    import random
+def generate_rap(topic, mood, keywords):
+    words = keywords.split(",")
 
-    title = f"🎤 {topic}\n\n"
-
-    # Different style tones
-    if style == "Emotional":
-        verse_lines = [
-            "तेरे बिना ये जीवन अधूरा सा लगे",
-            "तेरी यादों में हर पल दिल ये जले",
-            "आँखों में तेरी छवि बस जाती है",
-            "हर सांस में बस तेरा नाम ही रहे"
-        ]
-
-    elif style == "Bhajan":
-        verse_lines = [
-            "तेरा नाम ही मेरी पूजा बने",
-            "तेरे चरणों में ये जीवन ढले",
-            "हर पल तेरा ही ध्यान रहे",
-            "मेरे मन में बस तू ही बसे"
-        ]
-
-    elif style == "Tandav":
-        verse_lines = [
-            "जब तांडव करे तू, धरती भी डरे",
-            "तेरी ज्वाला से ये जग सारा जले",
-            "तेरी शक्ति से ब्रह्मांड हिले",
-            "तेरे क्रोध से समय भी थमे"
-        ]
-
-    else:  # Rap
-        verse_lines = [
-            "तेरे नाम की गूंज हर जगह फैले",
-            "तेरी शक्ति से हर डर ये भागे",
-            "जब तू साथ हो तो किस बात का डर",
-            "तेरे नाम से ही जीत ये मिले"
-        ]
-
-    hook_lines = [
-        "🔥 हर हर महादेव!",
-        "🚩 बम बम भोले!",
-        "⚡ जय शिव शंकर!"
+    aggressive_lines = [
+        "जब गूंजे तेरा नाम, धरती भी कांपे",
+        "तेरे तांडव से समय भी थम जाए",
+        "तेरी शक्ति से हर डर मिट जाए",
+        "तेरे क्रोध में पूरा संसार जल जाए"
     ]
 
-    # Create verses
-    verse1 = "\n".join(random.sample(verse_lines, 3))
-    verse2 = "\n".join(random.sample(verse_lines, 3))
+    emotional_lines = [
+        "तेरी यादों में दिल ये रोता है",
+        "तेरे बिना सब अधूरा लगता है",
+        "तेरा नाम ही अब सहारा है",
+        "तेरी भक्ति में सुकून मिलता है"
+    ]
 
-    hook = random.choice(hook_lines)
+    devotional_lines = [
+        "तेरा नाम ही मेरी पहचान बने",
+        "तेरे चरणों में ये जीवन ढले",
+        "हर सांस में बस तू ही रहे",
+        "तेरी भक्ति ही मेरा रास्ता बने"
+    ]
 
-    outro = "✨ तेरे नाम में ही मेरी दुनिया, महादेव 🙏"
+    if mood == "Aggressive":
+        base = aggressive_lines
+    elif mood == "Emotional":
+        base = emotional_lines
+    else:
+        base = devotional_lines
 
-    # Final Song
-    song = title
+    def create_line():
+        word = random.choice(words).strip() if words else topic
+        return f"{word} का असर जब दिल पे छाए,\n{random.choice(base)}"
+
+    verse1 = create_line() + "\n" + create_line()
+    verse2 = create_line() + "\n" + create_line()
+
+    hook = random.choice([
+        "🔥 हर हर महादेव!",
+        "🚩 जय बजरंगबली!",
+        "⚡ जय श्री राम!"
+    ])
+
+    song = f"🎤 {topic}\n\n"
     song += "🎶 Verse 1:\n" + verse1 + "\n\n"
     song += "🎧 Hook:\n" + hook + "\n\n"
     song += "🎶 Verse 2:\n" + verse2 + "\n\n"
     song += "🎧 Hook:\n" + hook + "\n\n"
-    song += outro
+    song += "✨ Outro:\nतेरा नाम ही मेरी शक्ति है 🙏"
 
     return song
 
 # -------------------------------
-# HOOK GENERATOR
+# HOOK
 # -------------------------------
 def generate_hooks(topic):
     hooks = [
-        "⚡ ये सुनकर दिमाग हिल जाएगा!",
-        "🔥 ये वीडियो skip मत करना!",
-        "🚩 हर शिव भक्त के लिए जरूरी!",
+        "⚡ ये वीडियो skip मत करना!",
+        "🔥 3 सेकंड में दिमाग हिल जाएगा!",
+        "🚩 हर भक्त को ये सुनना चाहिए!",
         "😳 ऐसा पहले कभी नहीं देखा!",
         "💥 ये सच आपको हिला देगा!"
     ]
@@ -99,7 +90,7 @@ def generate_hooks(topic):
 # CAPTION
 # -------------------------------
 def generate_caption(topic):
-    return f"{topic} 🔱\n\nHar Har Mahadev 🙏\n\n#mahadev #shiv #bhakti #shorts #viral #hindurap"
+    return f"{topic} 🔱\n\nHar Har Mahadev 🙏\n\n#mahadev #hanuman #shiv #shorts #viral"
 
 # -------------------------------
 # IMAGE
@@ -112,12 +103,13 @@ def generate_image(prompt):
 # UI
 # -------------------------------
 
-if menu == "Bollywood Song Generator":
+if menu == "Smart Rap Generator":
     topic = st.text_input("Enter topic")
-    style = st.selectbox("Select Style", ["Rap", "Bhajan", "Emotional", "Tandav"])
+    mood = st.selectbox("Select Mood", ["Aggressive", "Emotional", "Devotional"])
+    keywords = st.text_input("Enter keywords (comma separated)", "Shiv, Sati, Tandav")
 
-    if st.button("Generate Full Bollywood Song"):
-        st.write(generate_song(topic, style))
+    if st.button("Generate Rap"):
+        st.write(generate_rap(topic, mood, keywords))
 
 elif menu == "Hook Generator":
     topic = st.text_input("Enter topic")
