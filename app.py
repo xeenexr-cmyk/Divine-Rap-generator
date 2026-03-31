@@ -16,34 +16,40 @@ if st.button("Generate Lyrics"):
 
     if topic:
         try:
-            # Groq client
+            # API client
             client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
-            # Strong Prompt
+            # 🔥 PRO LEVEL PROMPT
             prompt = f"""
-            Write a HIGH QUALITY Hindi {style} song.
+            तुम एक professional Bollywood lyricist हो।
 
             Topic: {topic}
+            Style: {style}
             Mood: {mood}
 
-            Requirements:
-            - Full Bollywood cinematic lyrics
-            - Deep emotional storytelling
-            - Strong rhyming like real songs
-            - NO repetition
-            - Proper structure:
-              Intro
-              Verse 1
-              Hook
-              Verse 2
-              Hook
-              Outro
-            - Use poetic Hindi + modern rap fusion
+            Instructions:
+            - Pure Hindi + Hinglish mix
+            - Emotional, cinematic, powerful lyrics
+            - Strong rhyming + smooth rap flow
+            - No repetition
+            - No music description (like Music: ...)
 
-            Make it sound like a viral song.
+            Structure:
+            🎤 Intro (2-3 lines, impactful)
+            🎶 Verse 1 (deep storytelling, 4-6 lines)
+            🔥 Hook (catchy, viral, repeatable)
+            🎶 Verse 2 (more powerful than verse 1)
+            🔥 Hook
+            ✨ Outro (short emotional ending)
+
+            Extra:
+            - Use metaphors, divine imagery
+            - Add punchlines and goosebumps feeling
+
+            Make it feel like a viral YouTube devotional rap song.
             """
 
-            # API call (LATEST MODEL)
+            # API call
             response = client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
                 messages=[
