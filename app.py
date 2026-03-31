@@ -3,112 +3,99 @@ from groq import Groq
 
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
-st.set_page_config(page_title="🔥 Bhakti Rap AI Studio", layout="centered")
+st.set_page_config(page_title="🔥 Bhakti Rap Studio", layout="centered")
 
-st.title("🔥 Bhakti + Rap AI Studio 🎤")
+st.title("🔥 Bhakti + Emotional Rap Generator 🎤")
 
 # Inputs
-topic = st.text_input("🎯 विषय", placeholder="Ram Bal Kand, Radha Krishna Prem, Meera Bhajan")
-mode = st.selectbox("🎭 Mode Select", [
-    "Hardcore Rap",
+topic = st.text_input("🎯 विषय", placeholder="शिव सती प्रेम, राधा कृष्ण विरह, राम बालकांड")
+mode = st.selectbox("🎭 Mode", [
     "Devotional Rap",
-    "Emotional Bhakti",
-    "Story Rap (Ramayan Style)",
-    "Bollywood Bhakti"
+    "Emotional Prem Bhakti",
+    "Story (Ramayan Style)",
+    "Bollywood Bhakti Rap"
 ])
-mood = st.selectbox("🔥 Mood", ["Aggressive", "Emotional", "Peaceful", "Spiritual", "Sad"])
-keywords = st.text_input("🧠 Keywords", placeholder="राम, कृष्ण, प्रेम, विरह")
+mood = st.selectbox("🔥 मूड", ["Aggressive", "Emotional", "Spiritual", "Sad"])
+keywords = st.text_input("🧠 कीवर्ड", placeholder="प्रेम, विरह, अग्नि, तप")
 
-# Prompt Builder
-def get_prompt():
-    
-    if mode == "Hardcore Rap":
-        return f"""
-Divine + Raftaar style hardcore rap.
+def build_prompt():
 
-Topic: {topic}
-Mood: {mood}
-Keywords: {keywords}
+    return f"""
+तुम भारत के एक महान कवि, गीतकार और रैपर हो।
 
-Aggressive rap with punchlines, rhymes, attitude.
-"""
+विषय: {topic}
+मूड: {mood}
+शैली: {mode}
+कीवर्ड: {keywords}
 
-    elif mode == "Devotional Rap":
-        return f"""
-Bhakti rap likho (Hindi me).
+🎯 लक्ष्य:
+ऐसा गीत लिखो जो दिल को छू जाए और इंसान द्वारा लिखा हुआ लगे।
 
-Topic: {topic}
-Mood: {mood}
+🔴 भाषा नियम:
+- केवल शुद्ध और सुंदर हिन्दी
+- कोई Hinglish या English शब्द नहीं
+- सरल लेकिन काव्यात्मक भाषा
 
-Feel:
-- Mahadev / Ram bhakti
-- Devotion + power
-- Rap flow + mantra feel
+🔥 भाव के अनुसार लिखो:
 
-Structure:
-Intro, Verse, Hook, Verse, Hook, Outro
-"""
+अगर विषय प्रेम/विरह है:
+→ गहराई, दर्द, तड़प दिखाओ
 
-    elif mode == "Emotional Bhakti":
-        return f"""
-Radha Krishna / Meera style emotional bhakti rap.
+अगर भक्ति है:
+→ समर्पण, श्रद्धा, शक्ति
 
-Topic: {topic}
+अगर कहानी है:
+→ घटनाओं को क्रम में बताओ
 
-Feel:
-- Prem, virah, dard
-- Dil se likha hua lage
-- Poetry + rap mix
+📌 संरचना:
 
-Soft, deep, emotional Hindi lyrics.
-"""
+[इंट्रो]
+(2 पंक्तियाँ – वातावरण बनाओ)
 
-    elif mode == "Story Rap (Ramayan Style)":
-        return f"""
-Ramayan story rap likho (Bal Kand style).
+[अंतरा 1]
+(4-5 पंक्तियाँ – भाव या कहानी शुरू)
 
-Topic: {topic}
+[हुक]
+(2-3 पंक्तियाँ – बहुत catchy और दोहराने योग्य)
 
-- Kahani format
-- Doha/chaupai feel + rap flow
-- Narrative storytelling
+[अंतरा 2]
+(4-5 पंक्तियाँ – भाव की गहराई)
 
-Scene-wise progression ho.
-"""
+[हुक]
 
-    elif mode == "Bollywood Bhakti":
-        return f"""
-Modern Bollywood devotional rap likho.
+[आउट्रो]
+(2 पंक्तियाँ – गहरा अंत)
 
-Topic: {topic}
+⚡ अत्यंत महत्वपूर्ण:
+- हर पंक्ति अलग हो (कोई दोहराव नहीं)
+- पंक्तियाँ छोटी और प्रभावशाली हों
+- तुकबंदी (rhyme) बनी रहे
+- गीत में भावनात्मक गहराई हो
+- ऐसा लगे जैसे कोई सच्चा कवि लिख रहा है
 
-- Arijit Singh + Divine fusion
-- Emotional + cinematic
-- Easy words + catchy hook
-
-Song viral hona chahiye.
+अब पूरा गीत लिखो।
 """
 
 # Generate
-if st.button("🚀 Generate Song"):
+if st.button("🚀 पूरा गीत बनाओ"):
 
-    with st.spinner("⚡ Creating masterpiece..."):
-
-        prompt = get_prompt()
+    with st.spinner("⚡ भावनात्मक गीत तैयार हो रहा है..."):
 
         try:
+            prompt = build_prompt()
+
             response = client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
                 messages=[{"role": "user", "content": prompt}],
-                temperature=1.5,
+                temperature=1.4,
                 max_tokens=1200
             )
 
             lyrics = response.choices[0].message.content
 
-            st.success("✅ Song Generated!")
+            st.success("✅ गीत तैयार हो गया!")
 
-            st.markdown("## 🎤 Lyrics:")
+            st.markdown("## 🎤 Generated Lyrics:")
             st.code(lyrics)
 
         except Exception as e:
