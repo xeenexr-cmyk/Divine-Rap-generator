@@ -5,84 +5,85 @@ from groq import Groq
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
 # UI Setup
-st.set_page_config(page_title="Divine Rap Studio v3.0", page_icon="🔱", layout="wide")
+st.set_page_config(page_title="Divine Rap Studio v4.0", page_icon="🔱", layout="wide")
 
-# Custom CSS for Dark Mode & Styling
+# Custom CSS for Professional Look
 st.markdown("""
     <style>
-    .stApp { background-color: #0b0d11; color: #e0e0e0; }
-    .stButton>button { width: 100%; border-radius: 20px; background-color: #ff4b4b; color: white; font-weight: bold; border: none; }
-    .stTextInput>div>div>input { background-color: #1e2129; color: gold; border: 1px solid #444; }
-    .stSelectbox>div>div>div { background-color: #1e2129; }
+    .stApp { background-color: #05070a; color: #ffffff; }
+    .stButton>button { width: 100%; border-radius: 8px; background: linear-gradient(45deg, #ff4b2b, #ff416c); color: white; font-weight: bold; height: 3em; border: none; }
+    .stTextInput>div>div>input { background-color: #161b22; color: #00ffcc; border: 1px solid #30363d; font-size: 18px; }
+    .stTextArea>div>div>textarea { background-color: #0d1117; color: #c9d1d9; font-family: 'Courier New', Courier, monospace; border: 1px solid #30363d; }
     </style>
     """, unsafe_allow_html=True)
 
-st.title("🔱 Divine Rap Studio v3.0 (Music Ready)")
-st.write("अपने **DivineRapTv** चैनल के लिए Professional Lyrics और Beat Guide तैयार करें।")
+st.title("🔱 Divine Rap Studio v4.0 (Pro Edition)")
+st.write("### DivineRapTv के लिए असली 'Aggressive & Professional' लिरिक्स")
 
-col1, col2 = st.columns([1, 1])
+col1, col2 = st.columns([1, 1.2])
 
 with col1:
-    topic = st.text_input("🎯 विषय (Topic) लिखें", placeholder="जैसे: श्मशान निवासी शिव, कालजयी महाकाल")
+    topic = st.text_input("🎯 विषय (जैसे: महाकाल का अट्टहास, रक्तबीज वध, कृष्ण की कुरुक्षेत्र वाणी)", placeholder="यहाँ अपना टॉपिक लिखें...")
+    
     mode = st.selectbox("🎭 Flow और Energy चुनें", [
-        "Aggressive/Hardcore (Power & Energy)",
-        "Emotional/Devotional (Soulful Flow)",
-        "Storytelling (Cinematic Narrative)",
-        "Trance/Psych-Rap (Modern Vibe)"
+        "Aggressive/Hardcore (Fast Flow & Heavy Punchlines)",
+        "Deep Storytelling (Cinematic Imagery)",
+        "Emotional/Virah (Soulful & Melodic Rap)",
+        "Trance/Psych (High Energy Psychedelic)"
     ])
     
-    # बीट सजेशन का ऑप्शन
-    include_beat = st.checkbox("🎵 बीट और इंस्ट्रुमेंटल गाइड भी शामिल करें?", value=True)
+    include_beat = st.checkbox("🎵 बीट गाइड और BPM शामिल करें?", value=True)
+    st.divider()
+    generate_btn = st.button("🚀 Generate Masterpiece")
 
-def build_refined_prompt(topic, mode, include_beat):
-    beat_instruction = "साथ ही, गाने के अंत में 'Music Production Guide' दें जिसमें BPM (रफ़्तार), Bass Type, और कौन से Instruments (Sitar, Flute, Damru, Sub-bass) यूज़ करने चाहिए, ये भी बताएं।" if include_beat else ""
-    
+def build_pro_prompt(topic, mode, include_beat):
     return f"""
-तुम एक 'Devotional Hip-Hop' विशेषज्ञ हो। DivineRapTv के लिए रैप लिखो।
+तुम भारत के सबसे बड़े 'Divine Hip-Hop' Ghostwriter हो। तुम्हारा स्टाइल Professional Rappers जैसा है। 
+DivineRapTv के लिए Lyrics लिखो जो 'Viral' होने के लायक हों।
 
 🎯 TOPIC: {topic}
 🎭 FLOW MODE: {mode}
 
-STRICT RULES:
-1. **Rhyme Scheme:** हर दो लाइन का अंत एक जैसी ध्वनि (Rhyme) पर होना चाहिए (जैसे: रचयिता-विजेता)।
-2. **Meter:** लाइनें संतुलित हों ताकि सांस न टूटे।
-3. **No English:** केवल गहरी हिन्दी।
-4. **Cinematic Ad-libs:** लाइनों के बीच में (हर हर!, महादेव!, काल!) जैसे शब्दों का प्रयोग करें।
+❗ लिरिक्स लिखने के 'Strict' नियम:
+1. **No Basic Rhymes:** 'गया हूँ', 'रहा हूँ' जैसे साधारण शब्द प्रतिबंधित हैं। इनकी जगह Multisyllabic Rhymes का उपयोग करो (जैसे: 'विनाश' के साथ 'आकाश' नहीं, बल्कि 'अट्टहास' या 'कारवास' लाओ)।
+2. **Aggressive Vocabulary:** शुद्ध और भारी हिन्दी (जैसे: अघोर, भस्म, त्रिकाल, प्रचंड, मसान, हलाहल, गूँज, शून्य)।
+3. **Strict Meter:** हर लाइन की लंबाई एक जैसी रखो ताकि Flow न टूटे। 
+4. **Cinematic Punchlines:** ऐसी लाइनें जो 'Quotes' बन सकें।
+5. **Format:** [Intro], [Verse 1], [Hook 🔥], [Verse 2], [Hook], [Outro]।
 
-📌 STRUCTURE: [Intro] -> [Verse 1] -> [Hook] -> [Verse 2] -> [Hook] -> [Outro]
+{ "साथ ही, अंत में Beat Type (Old School/Trap), BPM और प्रमुख Instruments (Damru, Sitar, Heavy Sub-Bass) की जानकारी दें।" if include_beat else "" }
 
-{beat_instruction}
+लिखना शुरू करो:
 """
 
-if st.button("🚀 Generate Full Track Design"):
+if generate_btn:
     if not topic:
-        st.warning("कृपया पहले विषय (Topic) लिखें।")
+        st.warning("महादेव! टॉपिक तो डालिए।")
     else:
-        with st.spinner("🔥 शब्दों और धुनों का संगम तैयार हो रहा है..."):
+        with st.spinner("🔥 शब्दों को आग में तपाया जा रहा है..."):
             try:
+                # Temperature 0.8 रखा है ताकि AI भटके नहीं और तुकबंदी सटीक रखे
                 response = client.chat.completions.create(
                     model="llama-3.3-70b-versatile",
                     messages=[
-                        {"role": "system", "content": "तुम एक महान संगीतकार और लिरिसिस्ट हो जो डिवाइन रैप में माहिर है।"},
-                        {"role": "user", "content": build_refined_prompt(topic, mode, include_beat)}
+                        {"role": "system", "content": "तुम एक प्रोफेशनल हिन्दी रैप राइटर हो जो केवल 'Heavy' और 'Cinematic' कंटेंट लिखता है।"},
+                        {"role": "user", "content": build_pro_prompt(topic, mode, include_beat)}
                     ],
-                    temperature=1.0,
-                    max_tokens=1800
+                    temperature=0.8,
+                    max_tokens=2000
                 )
 
-                lyrics_data = response.choices[0].message.content
+                lyrics_output = response.choices[0].message.content
                 
                 with col2:
                     st.success("✨ मास्टरपीस तैयार है!")
-                    st.markdown("### 📜 Lyrics & Music Guide")
-                    st.text_area(label="Result", value=lyrics_data, height=700)
+                    st.markdown("### 📜 Final Script & Music Guide")
+                    st.text_area(label="Copy-Paste Ready Lyrics", value=lyrics_output, height=650)
                     
-                    # कॉपी करने का बटन
-                    st.info("💡 टिप: इन Lyrics को Suno AI या Udio में डालकर आप खुद का म्यूज़िक भी बना सकते हैं!")
+                    st.info("💡 Pro Tip: इन लिरिक्स को पढ़ते समय ज़ोर से बोलें (Recite) ताकि आपको Flow का अंदाजा हो सके।")
                 
             except Exception as e:
-                st.error(f"Error: {e}")
+                st.error(f"❌ Error: {e}")
 
 st.divider()
-st.caption("© 2026 DivineRapTv Studio | For Professional Use Only")
-                    
+st.caption("© 2026 DivineRapTv | Created for Professional Creators")
