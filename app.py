@@ -3,83 +3,96 @@ from groq import Groq
 
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
-st.set_page_config(page_title="🔥 Bhakti Rap Studio", layout="centered")
+st.title("🔥 Ultimate Bhakti Rap Studio 🎤")
 
-st.title("🔥 Bhakti + Emotional Rap Generator 🎤")
-
-# Inputs
-topic = st.text_input("🎯 विषय", placeholder="शिव सती प्रेम, राधा कृष्ण विरह, राम बालकांड")
+topic = st.text_input("🎯 विषय", placeholder="राम बालकांड, राधा कृष्ण विरह, मीरा प्रेम")
 mode = st.selectbox("🎭 Mode", [
-    "Devotional Rap",
-    "Emotional Prem Bhakti",
-    "Story (Ramayan Style)",
+    "Hardcore Rap",
+    "Ramayan Story Rap",
+    "Radha Krishna Virah Rap",
+    "Meera Bhakti Rap",
     "Bollywood Bhakti Rap"
 ])
-mood = st.selectbox("🔥 मूड", ["Aggressive", "Emotional", "Spiritual", "Sad"])
-keywords = st.text_input("🧠 कीवर्ड", placeholder="प्रेम, विरह, अग्नि, तप")
 
 def build_prompt():
 
-    return f"""
-तुम भारत के एक महान कवि, गीतकार और रैपर हो।
+    # 🔥 HARDCORE RAP
+    if mode == "Hardcore Rap":
+        return f"""
+Divine + Raftaar style hardcore rap likho.
 
-विषय: {topic}
-मूड: {mood}
-शैली: {mode}
-कीवर्ड: {keywords}
+Topic: {topic}
 
-🎯 लक्ष्य:
-ऐसा गीत लिखो जो दिल को छू जाए और इंसान द्वारा लिखा हुआ लगे।
+- aggressive tone
+- strong rhyme + punchlines
+- street vibe
 
-🔴 भाषा नियम:
-- केवल शुद्ध और सुंदर हिन्दी
-- कोई Hinglish या English शब्द नहीं
-- सरल लेकिन काव्यात्मक भाषा
+Structure: Intro, Verse, Hook, Verse, Hook, Outro
+"""
 
-🔥 भाव के अनुसार लिखो:
+    # 📖 RAMAYAN STORY RAP
+    elif mode == "Ramayan Story Rap":
+        return f"""
+रामचरितमानस (बालकांड) की शैली में rap likho.
 
-अगर विषय प्रेम/विरह है:
-→ गहराई, दर्द, तड़प दिखाओ
+Topic: {topic}
 
-अगर भक्ति है:
-→ समर्पण, श्रद्धा, शक्ति
+- कहानी flow में हो
+- हर scene describe करो
+- poetic + rap mix
 
-अगर कहानी है:
-→ घटनाओं को क्रम में बताओ
+Example flow:
+जन्म → बाल लीलाएँ → गुरु → सीता स्वयंवर
 
-📌 संरचना:
+Language: शुद्ध हिन्दी
+"""
 
-[इंट्रो]
-(2 पंक्तियाँ – वातावरण बनाओ)
+    # 💔 RADHA KRISHNA VIRAH
+    elif mode == "Radha Krishna Virah Rap":
+        return f"""
+राधा कृष्ण के विरह और प्रेम पर गहरा emotional rap लिखो.
 
-[अंतरा 1]
-(4-5 पंक्तियाँ – भाव या कहानी शुरू)
+Topic: {topic}
 
-[हुक]
-(2-3 पंक्तियाँ – बहुत catchy और दोहराने योग्य)
+- दर्द, तड़प, अधूरापन
+- poetic imagery (चाँद, रात, बांसुरी)
+- हर line दिल को छू जाए
 
-[अंतरा 2]
-(4-5 पंक्तियाँ – भाव की गहराई)
+NO boring lines.
+"""
 
-[हुक]
+    # 🙏 MEERA BHAKTI
+    elif mode == "Meera Bhakti Rap":
+        return f"""
+मीरा के कृष्ण प्रेम का दर्द और समर्पण rap style में लिखो.
 
-[आउट्रो]
-(2 पंक्तियाँ – गहरा अंत)
+Topic: {topic}
 
-⚡ अत्यंत महत्वपूर्ण:
-- हर पंक्ति अलग हो (कोई दोहराव नहीं)
-- पंक्तियाँ छोटी और प्रभावशाली हों
-- तुकबंदी (rhyme) बनी रहे
-- गीत में भावनात्मक गहराई हो
-- ऐसा लगे जैसे कोई सच्चा कवि लिख रहा है
+- पूर्ण समर्पण
+- दर्द + भक्ति
+- आत्मा का पुकार
 
-अब पूरा गीत लिखो।
+Language: pure हिन्दी
+"""
+
+    # 🎬 BOLLYWOOD STYLE
+    elif mode == "Bollywood Bhakti Rap":
+        return f"""
+Modern Bollywood devotional rap likho.
+
+Topic: {topic}
+
+- cinematic feel
+- emotional + catchy
+- Arijit + Divine fusion
+
+Hook viral होना चाहिए
 """
 
 # Generate
-if st.button("🚀 पूरा गीत बनाओ"):
+if st.button("🚀 Generate Song"):
 
-    with st.spinner("⚡ भावनात्मक गीत तैयार हो रहा है..."):
+    with st.spinner("🔥 Creating masterpiece..."):
 
         try:
             prompt = build_prompt()
@@ -87,15 +100,15 @@ if st.button("🚀 पूरा गीत बनाओ"):
             response = client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
                 messages=[{"role": "user", "content": prompt}],
-                temperature=1.4,
+                temperature=1.6,
                 max_tokens=1200
             )
 
             lyrics = response.choices[0].message.content
 
-            st.success("✅ गीत तैयार हो गया!")
+            st.success("✅ Song Generated!")
 
-            st.markdown("## 🎤 Generated Lyrics:")
+            st.markdown("## 🎤 Lyrics:")
             st.code(lyrics)
 
         except Exception as e:
