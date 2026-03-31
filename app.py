@@ -6,10 +6,10 @@ from io import BytesIO
 import moviepy.editor as mp
 
 st.set_page_config(page_title="Divine Rap AI Factory", layout="wide")
-st.title("🎤 Divine Rap AI Content Factory (Hybrid Pro MAX 🔥)")
+st.title("🎤 Divine Rap AI Content Factory (Ultimate 🔥)")
 
 menu = st.sidebar.selectbox("Choose Tool", [
-    "Script Generator",
+    "Auto Song Generator",
     "Hook Generator",
     "Caption + Hashtags",
     "Image Generator",
@@ -18,16 +18,55 @@ menu = st.sidebar.selectbox("Choose Tool", [
 ])
 
 # -------------------------------
-# SCRIPT
+# AUTO SONG GENERATOR
 # -------------------------------
-def generate_script(topic):
-    lines = [
-        f"{topic} 🔥 Mahadev ka tandav, duniya hil jayegi",
-        f"Har Har Mahadev 🚩 Aaj bhakti rap suno dil se",
-        f"{topic} ⚡ Shiv ki shakti, har andhera tod degi",
-        f"Mahadev ka naam lo, darr khud bhaag jayega",
-    ]
-    return "\n".join(random.sample(lines, 3))
+def generate_song(topic, style):
+    intro = f"🎤 {topic}\n\n"
+
+    if style == "Rap":
+        verse = [
+            "Beat pe aaya Mahadev ka flow",
+            "Trinetra khule to lage sab slow",
+            "Damru ki dhun me universe lost",
+            "Shiv naam le, tu ban ja boss"
+        ]
+        hook = ["🔥 Har Har Mahadev!", "🚩 Bam Bam Bhole!", "⚡ Shiv on the beat!"]
+
+    elif style == "Bhajan":
+        verse = [
+            "Shiv Shambhu mere mann me base",
+            "Har pal tera naam hi jape",
+            "Kailash pati tum ho sahara",
+            "Bhakton ka tum ho ujiyara"
+        ]
+        hook = ["🙏 Har Har Mahadev", "🕉️ Om Namah Shivay", "🌼 Jai Shiv Shankar"]
+
+    elif style == "Emotional":
+        verse = [
+            "Sati ka prem kabhi mita nahi",
+            "Virah me bhi wo jhuka nahi",
+            "Aansu me bhi bhakti thi",
+            "Unki kahani alag hi thi"
+        ]
+        hook = ["💔 Mahadev...", "😢 Sati...", "🙏 Shiv Shambhu"]
+
+    else:  # Tandav
+        verse = [
+            "Tandav kare jab Mahakaal",
+            "Hil jaaye pura brahmand saal",
+            "Agni jale aur dharti hile",
+            "Shiv ka roop sabko jala de"
+        ]
+        hook = ["🔥 Tandav!", "⚡ Mahakaal!", "💥 Har Har Mahadev!"]
+
+    song = intro
+    song += "🎶 Verse 1:\n" + "\n".join(random.sample(verse, 3)) + "\n\n"
+    song += "🎧 Hook:\n" + random.choice(hook) + "\n\n"
+    song += "🎶 Verse 2:\n" + "\n".join(random.sample(verse, 3)) + "\n\n"
+    song += "🎧 Hook:\n" + random.choice(hook) + "\n\n"
+    song += "✨ Outro:\nMahadev ka naam hi antim satya hai 🙏"
+
+    return song
 
 # -------------------------------
 # HOOK
@@ -56,45 +95,38 @@ def generate_image(prompt):
     return Image.open(BytesIO(requests.get(url).content))
 
 # -------------------------------
-# SCRIPT UI
+# UI
 # -------------------------------
-if menu == "Script Generator":
-    topic = st.text_input("Enter topic")
-    if st.button("Generate Script"):
-        st.write(generate_script(topic))
 
-# -------------------------------
-# HOOK UI
-# -------------------------------
+if menu == "Auto Song Generator":
+    topic = st.text_input("Enter topic")
+    style = st.selectbox("Select Style", ["Rap", "Bhajan", "Emotional", "Tandav"])
+
+    if st.button("Generate Full Song"):
+        st.write(generate_song(topic, style))
+
 elif menu == "Hook Generator":
     topic = st.text_input("Enter topic")
     if st.button("Generate Hooks"):
         st.write(generate_hooks(topic))
 
-# -------------------------------
-# CAPTION UI
-# -------------------------------
 elif menu == "Caption + Hashtags":
     topic = st.text_input("Enter topic")
     if st.button("Generate Caption"):
         st.write(generate_caption(topic))
 
-# -------------------------------
-# IMAGE GENERATOR (RATIO + QUALITY)
-# -------------------------------
 elif menu == "Image Generator":
     prompt = st.text_input("Enter image idea")
 
     ratio = st.selectbox("Aspect Ratio", ["1:1", "9:16", "16:9"])
-    quality = st.selectbox("Quality", ["HD", "2K", "4K"])
 
     if st.button("Generate Image"):
         img = generate_image(prompt)
 
         if ratio == "9:16":
-            size = (720,1280) if quality=="HD" else (1440,2560) if quality=="2K" else (2160,3840)
+            size = (720,1280)
         elif ratio == "16:9":
-            size = (1280,720) if quality=="HD" else (2560,1440) if quality=="2K" else (3840,2160)
+            size = (1280,720)
         else:
             size = (1024,1024)
 
@@ -105,9 +137,6 @@ elif menu == "Image Generator":
         with open("image.png", "rb") as f:
             st.download_button("Download Image", f)
 
-# -------------------------------
-# IMAGE → VIDEO
-# -------------------------------
 elif menu == "Image → Video":
     images = st.file_uploader("Upload images", accept_multiple_files=True)
 
@@ -126,12 +155,6 @@ elif menu == "Image → Video":
         video.write_videofile("video.mp4", fps=24)
         st.video("video.mp4")
 
-        with open("video.mp4", "rb") as f:
-            st.download_button("Download Video", f)
-
-# -------------------------------
-# TEXT → VIDEO
-# -------------------------------
 elif menu == "Text → Video":
     topic = st.text_input("Enter topic")
 
@@ -149,13 +172,10 @@ elif menu == "Text → Video":
             name = f"scene_{i}.png"
             img.save(name)
             files.append(name)
-            st.image(name, caption=scene)
+            st.image(name)
 
         clips = [mp.ImageClip(f).set_duration(2).resize((720,1280)) for f in files]
         video = mp.concatenate_videoclips(clips)
 
         video.write_videofile("final.mp4", fps=24)
         st.video("final.mp4")
-
-        with open("final.mp4", "rb") as f:
-            st.download_button("Download Video", f)
