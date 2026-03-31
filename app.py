@@ -125,8 +125,11 @@ STYLES = {
 # ==================== GENERATE FUNCTION ====================
 def generate_rap(style, topic, mood, length):
     try:
-        # Correct model name is 'gemini-1.5-flash'
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        # 'models/' prefix lagane se v1beta ka issue khatam ho jata hai
+        model = genai.GenerativeModel(model_name='models/gemini-1.5-flash')
+        
+        # ... baaki config wahi rahega ...
+        
         
         prompt = f"""
 तुम्हें 'DivineRapTv' के लिए दुनिया का सबसे खतरनाक 'Hardcore Bhakti Rap' लिखना है।
