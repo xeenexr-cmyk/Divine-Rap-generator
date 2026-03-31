@@ -1,107 +1,115 @@
 import streamlit as st
 from groq import Groq
-import os
 
-# API KEY (Streamlit Secrets me add karo: GROQ_API_KEY)
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
-st.set_page_config(page_title="🔥 Bollywood Lyrics Generator", layout="centered")
+st.set_page_config(page_title="🔥 Bhakti Rap AI Studio", layout="centered")
 
-st.title("🔥 Bollywood Level AI Lyrics Generator 🎤")
+st.title("🔥 Bhakti + Rap AI Studio 🎤")
 
 # Inputs
-topic = st.text_input("🎯 विषय (Topic)", placeholder="Shiv Tandav, Lanka Dahan")
-style = st.selectbox("🎵 शैली (Style)", ["Rap", "Bollywood", "Sad", "Devotional"])
-mood = st.selectbox("🔥 मूड (Mood)", ["Aggressive", "Emotional", "Dark", "Motivational"])
-keywords = st.text_input("🧠 कीवर्ड (optional)", placeholder="अग्नि, काल, विनाश")
+topic = st.text_input("🎯 विषय", placeholder="Ram Bal Kand, Radha Krishna Prem, Meera Bhajan")
+mode = st.selectbox("🎭 Mode Select", [
+    "Hardcore Rap",
+    "Devotional Rap",
+    "Emotional Bhakti",
+    "Story Rap (Ramayan Style)",
+    "Bollywood Bhakti"
+])
+mood = st.selectbox("🔥 Mood", ["Aggressive", "Emotional", "Peaceful", "Spiritual", "Sad"])
+keywords = st.text_input("🧠 Keywords", placeholder="राम, कृष्ण, प्रेम, विरह")
 
-# Generate Button
-if st.button("🚀 पूरा गाना बनाओ"):
+# Prompt Builder
+def get_prompt():
+    
+    if mode == "Hardcore Rap":
+        return f"""
+Divine + Raftaar style hardcore rap.
 
-    with st.spinner("⚡ Cinematic lyrics generate ho rahe hain..."):
+Topic: {topic}
+Mood: {mood}
+Keywords: {keywords}
 
-        # 🔥 MAIN PROMPT (Human-like + Bollywood level)
-        prompt = f"""
-तुम एक TOP Bollywood lyricist + underground rapper हो।
-
-विषय: {topic}
-स्टाइल: {style}
-मूड: {mood}
-कीवर्ड: {keywords}
-
-🎯 GOAL:
-ऐसा गाना लिखो जो इंसान ने लिखा लगे, AI नहीं।
-
-🔴 RULES:
-- केवल शुद्ध और natural हिन्दी
-- कोई robotic tone नहीं
-- rhyme + flow maintain करो
-- repetition बिल्कुल नहीं
-
-🔥 STYLE:
-- cinematic + emotional + aggressive mix
-- storytelling feel हो
-- rap flow natural हो
-
-📌 STRUCTURE:
-
-[इंट्रो]
-(2 लाइन – strong entry)
-
-[अंतरा 1]
-(4-5 लाइन – कहानी)
-
-[हुक]
-(2-3 लाइन – catchy + viral)
-
-[अंतरा 2]
-(4-5 लाइन – peak intensity)
-
-[हुक]
-
-[आउट्रो]
-(2 लाइन – deep ending)
-
-⚡ VERY IMPORTANT:
-- Hook सबसे catchy होना चाहिए
-- lines छोटी और impactful हो
-- Divine / Raftaar level flow हो
-
-अब पूरा powerful cinematic गीत लिखो।
+Aggressive rap with punchlines, rhymes, attitude.
 """
 
+    elif mode == "Devotional Rap":
+        return f"""
+Bhakti rap likho (Hindi me).
+
+Topic: {topic}
+Mood: {mood}
+
+Feel:
+- Mahadev / Ram bhakti
+- Devotion + power
+- Rap flow + mantra feel
+
+Structure:
+Intro, Verse, Hook, Verse, Hook, Outro
+"""
+
+    elif mode == "Emotional Bhakti":
+        return f"""
+Radha Krishna / Meera style emotional bhakti rap.
+
+Topic: {topic}
+
+Feel:
+- Prem, virah, dard
+- Dil se likha hua lage
+- Poetry + rap mix
+
+Soft, deep, emotional Hindi lyrics.
+"""
+
+    elif mode == "Story Rap (Ramayan Style)":
+        return f"""
+Ramayan story rap likho (Bal Kand style).
+
+Topic: {topic}
+
+- Kahani format
+- Doha/chaupai feel + rap flow
+- Narrative storytelling
+
+Scene-wise progression ho.
+"""
+
+    elif mode == "Bollywood Bhakti":
+        return f"""
+Modern Bollywood devotional rap likho.
+
+Topic: {topic}
+
+- Arijit Singh + Divine fusion
+- Emotional + cinematic
+- Easy words + catchy hook
+
+Song viral hona chahiye.
+"""
+
+# Generate
+if st.button("🚀 Generate Song"):
+
+    with st.spinner("⚡ Creating masterpiece..."):
+
+        prompt = get_prompt()
+
         try:
-            # 🎤 Lyrics Generation
             response = client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
                 messages=[{"role": "user", "content": prompt}],
-                temperature=1.6,
+                temperature=1.5,
                 max_tokens=1200
             )
 
             lyrics = response.choices[0].message.content
 
-            st.success("✅ गाना तैयार हो गया!")
+            st.success("✅ Song Generated!")
 
-            st.markdown("## 🎤 Generated Lyrics:")
-            st.markdown(f"```\n{lyrics}\n```")
-
-            # 🔥 Hook Upgrade
-            hook_prompt = f"""
-इस गाने के लिए 5 ultra catchy hook lines लिखो।
-
-Song:
-{lyrics}
-"""
-
-            hook_res = client.chat.completions.create(
-                model="llama-3.3-70b-versatile",
-                messages=[{"role": "user", "content": hook_prompt}],
-                temperature=1.8
-            )
-
-            st.markdown("## 🔥 Viral Hook Ideas:")
-            st.markdown(f"```\n{hook_res.choices[0].message.content}\n```")
+            st.markdown("## 🎤 Lyrics:")
+            st.code(lyrics)
 
         except Exception as e:
             st.error(f"❌ Error: {e}")
