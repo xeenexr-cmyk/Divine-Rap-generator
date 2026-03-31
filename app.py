@@ -1,119 +1,66 @@
 import streamlit as st
 import google.generativeai as genai
-from PIL import Image
-import requests
-from io import BytesIO
 
 # CONFIG
-st.set_page_config(page_title="AI Content Factory 🔥", layout="wide")
+st.set_page_config(page_title="AI Lyrics Pro", layout="centered")
 
 # API KEY
 genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-model = genai.GenerativeModel("gemini-1.5-flash")
 
-st.title("🔥 Divine AI Content Factory (Ultimate Pro)")
+# TITLE
+st.title("🎤 Bollywood Level AI Lyrics Generator 🔥")
 
-tabs = st.tabs([
-    "🎤 Lyrics Generator",
-    "🎬 Hook Generator",
-    "📱 Caption + Hashtags",
-    "🖼️ Image Generator"
-])
+# INPUTS
+topic = st.text_input("Enter Topic (e.g. Shiv Tandav, Lanka Dahan)")
+style = st.selectbox("Select Style", ["Rap", "Bollywood", "Devotional"])
+mood = st.selectbox("Select Mood", ["Aggressive", "Emotional", "Powerful"])
+keywords = st.text_input("Enter Keywords (optional)")
 
-# =========================
-# 🎤 LYRICS GENERATOR
-# =========================
-with tabs[0]:
-    st.header("🎤 Bollywood Level Lyrics Generator")
+# BUTTON
+if st.button("Generate Lyrics"):
 
-    topic = st.text_input("Enter Topic")
-    style = st.selectbox("Style", ["Rap", "Bollywood", "Devotional"])
-    mood = st.selectbox("Mood", ["Aggressive", "Emotional", "Powerful"])
-    keywords = st.text_input("Keywords (optional)")
+    if topic:
+        with st.spinner("🔥 Creating masterpiece lyrics..."):
 
-    if st.button("Generate Lyrics"):
-        prompt = f"""
-        Write a FULL professional Hindi {style} song.
+            prompt = f"""
+            Write a HIGH QUALITY Hindi {style} song.
 
-        Topic: {topic}
-        Mood: {mood}
-        Keywords: {keywords}
+            Topic: {topic}
+            Mood: {mood}
+            Keywords: {keywords}
 
-        Requirements:
-        - Bollywood level quality
-        - Deep meaningful lyrics
-        - NO repetition
-        - Strong rhyming
-        - Emotional storytelling
+            Strict Requirements:
+            - Must feel like real Bollywood / professional rap
+            - Strong rhyming (तुकबंदी)
+            - NO repetition of lines
+            - Deep storytelling
+            - Natural Hinglish/Hindi mix
+            - Each verse should be DIFFERENT
 
-        Structure:
-        Intro
-        Verse 1
-        Hook
-        Verse 2
-        Hook
-        Outro
-        """
+            Structure:
+            🎤 Title
 
-        res = model.generate_content(prompt)
-        st.write(res.text)
+            🎶 Verse 1 (4-6 lines)
+            🎧 Hook (2 lines catchy)
 
-# =========================
-# 🎬 HOOK GENERATOR
-# =========================
-with tabs[1]:
-    st.header("🔥 Viral Hook Generator")
+            🎶 Verse 2 (4-6 lines)
+            🎧 Hook (2 lines)
 
-    hook_topic = st.text_input("Hook Topic")
+            ✨ Outro (2-3 lines powerful ending)
 
-    if st.button("Generate Hook"):
-        prompt = f"""
-        Create 5 viral Hindi hooks for topic: {hook_topic}
+            Make it emotional + cinematic + powerful.
+            """
 
-        - Short
-        - Catchy
-        - Emotional or powerful
-        """
+            try:
+                # ✅ SAFE MODEL (no error)
+                model = genai.GenerativeModel("gemini-1.5-flash-8b")
+                response = model.generate_content(prompt)
 
-        res = model.generate_content(prompt)
-        st.write(res.text)
+                st.success("✅ Lyrics Generated!")
+                st.write(response.text)
 
-# =========================
-# 📱 CAPTION + HASHTAGS
-# =========================
-with tabs[2]:
-    st.header("📱 Caption + Hashtags Generator")
+            except Exception as e:
+                st.error(f"Error: {e}")
 
-    caption_topic = st.text_input("Content Topic")
-
-    if st.button("Generate Caption"):
-        prompt = f"""
-        Write a viral Instagram caption in Hinglish for: {caption_topic}
-
-        Also give:
-        - 10 hashtags
-        - SEO optimized
-        """
-
-        res = model.generate_content(prompt)
-        st.write(res.text)
-
-# =========================
-# 🖼️ IMAGE GENERATOR
-# =========================
-with tabs[3]:
-    st.header("🖼️ AI Image Generator")
-
-    img_prompt = st.text_input("Enter Image Prompt")
-    ratio = st.selectbox("Aspect Ratio", ["1:1", "9:16", "16:9"])
-
-    if st.button("Generate Image"):
-        try:
-            url = f"https://image.pollinations.ai/prompt/{img_prompt}"
-            response = requests.get(url)
-            img = Image.open(BytesIO(response.content))
-
-            st.image(img, caption="Generated Image")
-
-        except Exception as e:
-            st.error(f"Error: {e}")
+    else:
+        st.warning("⚠️ Please enter a topic")
