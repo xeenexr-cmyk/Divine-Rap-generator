@@ -47,7 +47,6 @@ st.markdown("""
     height: 3.2rem;
     border-radius: 10px;
     font-size: 1.1rem;
-    transition: all 0.3s;
 }
 .stButton>button:hover {
     transform: scale(1.02);
@@ -77,7 +76,7 @@ st.markdown("""
 <div class="final-header">
     <div class="final-title">🔱 DivineRapTv - FINAL RAP ENGINE 🔱</div>
     <p style="color: #ffaa44;">Hardcore + Flow + Bhakti + Story = VIRAL RAP</p>
-    <p style="color: #ff8866; font-size: 0.9rem;">🎤 Divine Intro | Powerful Hook | Story Verses | Grand Outro 🎤</p>
+    <p style="color: #ff8866;">🎤 Divine Intro | Powerful Hook | Story Verses | Grand Outro 🎤</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -85,190 +84,173 @@ st.markdown("""
 STYLES = {
     "🔥 हार्डकोर भक्ति रैप": {
         "desc": "दिवाइन स्टाइल | भारी बीट्स | आक्रामक फ्लो",
-        "intro_style": "divine_build_up",
-        "hook_style": "powerful_chorus",
-        "verse_style": "story_battle",
-        "outro_style": "grand_finale"
+        "suno": "hardcore aggressive rap, heavy bass, fast flow"
     },
     "📖 रामायण कथा रैप": {
         "desc": "लंका दहन | रामायण की कहानी | सिनेमैटिक",
-        "intro_style": "cinematic_opening",
-        "hook_style": "epic_chorus",
-        "verse_style": "scene_by_scene",
-        "outro_style": "victory_ending"
+        "suno": "cinematic epic rap, war drums, storytelling"
     },
     "💙 राधा कृष्ण प्रेम रैप": {
         "desc": "विरह | प्रेम | भावनात्मक | मधुर",
-        "intro_style": "emotional_build",
-        "hook_style": "melodic_chorus",
-        "verse_style": "love_story",
-        "outro_style": "heartfelt_ending"
+        "suno": "emotional melodic rap, bansuri, romantic hip hop"
     },
     "🌙 शिव तांडव रैप": {
         "desc": "महाकाल | श्मशान | तांडव | भयंकर",
-        "intro_style": "beast_opening",
-        "hook_style": "tandav_chorus",
-        "verse_style": "destruction_flow",
-        "outro_style": "mic_drop"
+        "suno": "hardcore dark rap, heavy bass, intense"
     },
     "🕊️ मीरा भक्ति रैप": {
         "desc": "समर्पण | दर्द | गिरधर | प्रेम",
-        "intro_style": "devotional_build",
-        "hook_style": "bhajan_chorus",
-        "verse_style": "pain_story",
-        "outro_style": "surrender_ending"
+        "suno": "devotional hip hop, emotional, bhajan fusion"
     }
 }
 
 # ==================== PROMPT BUILDER ====================
-def build_final_prompt(style, topic, mood, intensity):
-    
-    style_data = STYLES[style]
+def build_prompt(style, topic, mood, length):
     
     mood_map = {
-        "💔 Emotional": "भावनात्मक, दर्द भरी आवाज, धीमी गति, हृदय से जुड़ी",
-        "⚖️ Balanced": "संतुलित, भावना और शक्ति का मिश्रण",
-        "🔥 Aggressive": "आक्रामक, तेज फ्लो, कठोर शब्द, युद्ध जैसा",
-        "🚀 Viral Ready": "यादगार हुक, रील्स फ्रेंडली, ट्रेंडिंग स्टाइल"
+        "💔 Emotional": "emotional, slow tempo, heart-touching, pain and devotion",
+        "⚖️ Balanced": "medium flow, balanced energy, steady rhythm",
+        "🔥 Aggressive": "fast flow, hard delivery, intense, powerful, war-like",
+        "🚀 Viral Ready": "catchy hook, repeatable chorus, trending style, reels friendly"
     }
     
-    length_map = {
-        "Short (1-2 min)": "छोटा - YouTube Shorts के लिए",
-        "Full (2-3 min)": "पूरा - वायरल ट्रैक",
-        "Extended (3-4 min)": "विस्तारित - पूरा अनुभव"
+    length_val = {
+        "Short (1-2 min)": "short version - 8 lines per verse",
+        "Full (2-3 min)": "full version - 12 lines per verse",
+        "Extended (3-4 min)": "extended - 16 lines per verse"
     }
     
-    return f"""
-तुम एक मास्टर हिंदी रैप गीतकार हो। तुम DIVINE, RAFTAAR और बॉलीवुड लिरिसिस्ट के लेवल पर लिखते हो।
+    verse_lines = 8 if "Short" in length else 12 if "Full" in length else 16
+    
+    return f"""You are a master Hindi rap lyricist. You write like Divine, Raftaar, and top Bollywood lyricists.
 
-🎯 शैली: {style}
-🎭 विषय: {topic}
-💫 मूड: {mood} - {mood_map[mood]}
-📏 लंबाई: {length_map[intensity]}
+STYLE: {style}
+TOPIC: {topic}
+MOOD: {mood} - {mood_map[mood]}
+LENGTH: {length_val[length]}
 
-🎬 EXACT FORMAT (बिल्कुल इसी STRUCTURE में लिखो):
+EXACT FORMAT - Write exactly like this structure:
 
-[🎤 Intro – Divine Build-up]
-(4-6 पंक्तियाँ - जोश भरा, माहौल बनाने वाला)
-- इसमें divine energy हो
-- "जय", "प्रणाम", "महिमा" जैसे शब्द हों
-- धीरे-धीरे बीट बिल्ड होने जैसा feel
+[Intro - Divine Build-up]
+(4 lines - energetic opening, builds atmosphere)
+- Use words like: जय, प्रणाम, महिमा, शक्ति
+- Create divine energy
 
-[🎧 Beat Drop – Heavy Divine Rap]
-(4-6 पंक्तियाँ - बीट ड्रॉप के बाद)
-- तेज फ्लो शुरू
-- पावरफुल लाइन्स
-- पहली punchline यहीं आए
+[Beat Drop - Heavy Rap]
+(4 lines - fast flow starts after beat drop)
+- First punchline here
+- Powerful, aggressive lines
 
-[⚔️ Verse 1 – Story Build Up]
-(12-16 पंक्तियाँ - कहानी की शुरुआत)
-- विषय का परिचय
-- पृष्ठभूमि कहानी
-- संघर्ष या दर्द का चित्रण
-- हर 4 लाइन में punchline
+[Verse 1 - Story Begins]
+({verse_lines} lines - background story, setup)
+- Introduce the topic
+- Show struggle or pain
+- Every 4 lines = 1 punchline
 
-[🔥 Hook – Powerful Chorus]
-(4-6 पंक्तियाँ - सबसे यादगार)
-- REPEATABLE
-- रील्स/शॉर्ट्स के लिए परफेक्ट
-- दोहराने में मजा आए
+[Hook - Powerful Chorus]
+(4 lines - most catchy, repeatable)
 - Viral moments
+- Shorts/reels friendly
+- Easy to remember
 
-[⚡ Verse 2 – Escalation/Main Battle]
-(12-16 पंक्तियाँ - कहानी का चरम)
-- तनाव बढ़ाए
-- मुख्य घटना
-- भावनाओं का उफान
-- क्लाइमेक्स की ओर बढ़े
+[Verse 2 - Escalation]
+({verse_lines} lines - main event, tension builds)
+- Story reaches peak
+- Emotions rise
+- Powerful metaphors
 
-[💥 Verse 3 – Climax/Finale]
-(8-12 पंक्तियाँ - चरमोत्कर्ष)
-- सबसे तेज फ्लो
-- जीत/समापन/चमत्कार
-- सबसे शक्तिशाली लाइन्स
+[Verse 3 - Climax]
+({verse_lines} lines - final battle, victory)
+- Fastest flow
+- Most powerful lines
+- Victory or resolution
 
-[🔥 Final Hook – Grand Outro]
-(6-8 पंक्तियाँ - भव्य समापन)
-- पहले हुक को दोहराए या बड़ा करे
-- "जय", "जयकार", "उत्सव" जैसे शब्द
-- सकारात्मक समापन
-- श्रोता को गूंजता हुआ महसूस हो
+[Final Hook - Grand Outro]
+(6 lines - celebration, powerful ending)
+- Repeat hook or make it bigger
+- Words: जय, जयकार, उत्सव
+- Positive, victorious ending
 
-🎨 STYLE SPECIFIC RULES:
+CRITICAL RULES:
+1. Every line: 4-7 words exactly
+2. Perfect Hindi spelling - no mistakes
+3. Every 2 lines must rhyme
+4. Hook must be catchy and repeatable
+5. Use divine vocabulary
+6. Create visual imagery
+7. No "hai", "hoon", "tha" in hardcore sections
 
-{style} शैली के लिए:
-- Intro: {style_data['intro_style']}
-- Hook: {style_data['hook_style']}
-- Verses: {style_data['verse_style']}
-- Outro: {style_data['outro_style']}
+EXAMPLE OF PERFECT LINES:
+[Intro]
+जय माता दी! 🔱
+जब अधर्म बढ़ा, तब शक्ति ने रूप लिया
+नवरात्रि का समय, मां ने जग को जगाया
 
-📝 WRITING RULES:
-1. हर पंक्ति में 4-7 शब्द (Suno AI के लिए)
-2. हर 2 लाइन में तुक (rhyme)
-3. शुद्ध हिंदी, कोई स्पेलिंग मिस्टेक नहीं
-4. हर 4 लाइन में एक punchline
-5. [Intro] में divine feel हो
-6. [Hook] सबसे catchy हो
-7. [Outro] में उत्सव या विजय का भाव हो
+[Hook]
+जय-जय-जय दुर्गा मां!
+शक्ति का रूप, महिषासुर का अंत यहां!
+जय-जय-जय दुर्गा मां! 🔥
+अधर्म का नाश, धर्म का उजाला यहां!
 
-अब विषय "{topic}" पर {style} शैली में PERFECT RAP लिखो।
+⚡ [Verse 2 – Maa Durga’s Entry]
+सिंह पे सवार, दस भुजाओं में अस्त्र,
+आंखों में अग्नि, रूप था भयंकर।
+त्रिशूल, चक्र, तलवार की चमक,
+देख महिषासुर भी गया था थम!
+नौ दिन तक चला युद्ध भीषण,
+धरती कांपी, गूंजा हर दिशा में रण!
+हर वार में मां की शक्ति दिखाई,
+असुरों की सेना सब धूल में मिलाई!
+
+Now write PERFECT RAP for:
+TOPIC: {topic}
+STYLE: {style}
+MOOD: {mood}
 
 OUTPUT ONLY LYRICS WITH EXACT SECTION HEADERS:
 """
 
 # ==================== GENERATE FUNCTION ====================
-def generate_final_rap(style, topic, mood, intensity):
+def generate_rap(style, topic, mood, length):
     try:
         response = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[
-                {"role": "system", "content": """You are a master Hindi rap lyricist. You write like Divine, Raftaar, and top Bollywood lyricists. 
+                {"role": "system", "content": """You are a master Hindi rap lyricist. You write like Divine and Raftaar.
 Your lyrics have:
 - Divine intro with energy
-- Beat drop section with heavy flow
+- Beat drop with heavy flow
 - Story verses with punchlines
 - Powerful, repeatable hook
 - Grand outro with celebration
 
-Every line is perfect Hindi, no spelling mistakes."""},
-                {"role": "user", "content": build_final_prompt(style, topic, mood, intensity)}
+Every line: 4-7 words, perfect Hindi, no spelling mistakes.
+Use emojis like 🔱, 🔥, ⚔️, 💥 in section headers."""},
+                {"role": "user", "content": build_prompt(style, topic, mood, length)}
             ],
             temperature=0.85,
-            max_tokens=2800,
-            top_p=0.95
+            max_tokens=2800
         )
-        
-        lyrics = response.choices[0].message.content
-        
-        # Post-processing to ensure proper structure
-        required_sections = ["Intro", "Beat Drop", "Verse 1", "Hook", "Verse 2", "Verse 3", "Final Hook"]
-        missing_sections = []
-        
-        for section in required_sections:
-            if section not in lyrics and section.lower() not in lyrics.lower():
-                missing_sections.append(section)
-        
-        return lyrics, missing_sections
-        
+        return response.choices[0].message.content
     except Exception as e:
-        return f"Error: {str(e)}", []
+        return f"Error: {str(e)}"
 
 # ==================== UI LAYOUT ====================
 col1, col2 = st.columns([1, 1.5])
 
 with col1:
     st.markdown('<div class="style-card">', unsafe_allow_html=True)
-    st.markdown("### 🎯 **RAP TOPIC**")
+    st.markdown("### 🎯 RAP TOPIC")
     topic = st.text_input(
         "",
-        placeholder="उदाहरण: माँ दुर्गा महिषासुर मर्दिनी, शिव सती प्रेम कहानी, लंका दहन",
+        placeholder="Example: Maa Durga Mahishasur, Shiv Sati, Lanka Dahan, Radha Krishna Virah",
         key="topic_input"
     )
     
-    st.markdown("### 🎭 **RAP STYLE**")
+    st.markdown("### 🎭 RAP STYLE")
     style = st.selectbox("", list(STYLES.keys()), key="style_select")
     
-    st.markdown("### 💫 **MOOD**")
+    st.markdown("### 💫 MOOD")
     mood = st.select_slider(
         "",
         options=["💔 Emotional", "⚖️ Balanced", "🔥 Aggressive", "🚀 Viral Ready"],
@@ -276,8 +258,8 @@ with col1:
         key="mood_slider"
     )
     
-    st.markdown("### 📏 **LENGTH**")
-    intensity = st.select_slider(
+    st.markdown("### 📏 LENGTH")
+    length = st.select_slider(
         "",
         options=["Short (1-2 min)", "Full (2-3 min)", "Extended (3-4 min)"],
         value="Full (2-3 min)",
@@ -287,30 +269,30 @@ with col1:
     
     # Structure Preview
     st.markdown('<div class="style-card">', unsafe_allow_html=True)
-    st.markdown("### 📋 **SONG STRUCTURE**")
-    st.markdown(""```
-[🎤 Intro – Divine Build-up]
-[🎧 Beat Drop – Heavy Divine Rap]
-[⚔️ Verse 1 – Story Build Up]
-[🔥 Hook – Powerful Chorus]
-[⚡ Verse 2 – Escalation]
-[💥 Verse 3 – Climax/Finale]
-[🔥 Final Hook – Grand Outro]
+    st.markdown("### 📋 SONG STRUCTURE")
+    st.markdown("""
+    🎤 Intro - Divine Build-up
+    🎧 Beat Drop - Heavy Rap
+    ⚔️ Verse 1 - Story Begins
+    🔥 Hook - Powerful Chorus
+    ⚡ Verse 2 - Escalation
+    💥 Verse 3 - Climax
+    🔥 Final Hook - Grand Outro
     """)
     st.markdown('</div>', unsafe_allow_html=True)
     
-    generate = st.button("🔱 **GENERATE PERFECT SONG** 🔱", use_container_width=True)
+    generate = st.button("🔱 GENERATE PERFECT SONG 🔱", use_container_width=True)
 
 with col2:
     if generate:
         if not topic:
-            st.error("⚠️ कृपया पहले RAP TOPIC डालें!")
+            st.error("⚠️ Please enter a rap topic first!")
         else:
-            with st.spinner(f"🔱 {style} में PERFECT RAP लिखा जा रहा है..."):
-                result, missing = generate_final_rap(style, topic, mood, intensity)
+            with st.spinner(f"🔱 Writing {style} in perfect format..."):
+                result = generate_rap(style, topic, mood, length)
                 
                 if "Error" not in result:
-                    st.success("✅ **PERFECT SONG READY!** 🔱")
+                    st.success("✅ PERFECT SONG READY! 🔱")
                     
                     # Style info
                     style_data = STYLES[style]
@@ -318,65 +300,49 @@ with col2:
                     <div style="background: #1a1a1a; padding: 0.8rem; border-radius: 10px; margin-bottom: 1rem;">
                         <span class="divine-badge">🎤 {style}</span>
                         <span class="divine-badge">💫 {mood}</span>
-                        <span class="divine-badge">📏 {intensity}</span>
+                        <span class="divine-badge">📏 {length}</span>
                         <span class="divine-badge">🔱 DivineRapTv</span>
                     </div>
                     """, unsafe_allow_html=True)
                     
-                    # Show warning if sections missing
-                    if missing:
-                        st.info(f"💡 Sections: All major sections included")
+                    st.markdown("### 🎤 PERFECT SONG READY")
+                    st.text_area("", result, height=600, key="lyrics_display")
                     
-                    st.markdown("### 🎤 **PERFECT SONG READY**")
-                    st.text_area("", result, height=650, key="lyrics_display")
-                    
-                    # Download options
+                    # Download buttons
                     col_a, col_b, col_c = st.columns(3)
                     
                     with col_a:
                         st.download_button(
-                            "📥 **DOWNLOAD SONG**",
+                            "📥 DOWNLOAD LYRICS",
                             result,
                             file_name=f"PERFECT_SONG_{topic.replace(' ', '_')}.txt",
-                            mime="text/plain",
                             use_container_width=True
                         )
                     
                     with col_b:
-                        # Suno AI Metadata
                         suno_meta = f"""--- SUNO AI v5.5 METADATA ---
 STYLE: {style}
 TOPIC: {topic}
 MOOD: {mood}
-LENGTH: {intensity}
+LENGTH: {length}
 
-STYLE PROMPT:
-{style_data['desc']} | Powerful vocals | Hindi Rap | Divine Energy
-
-STRUCTURE:
-[Intro] Divine build-up
-[Beat Drop] Heavy rap
-[Verse] Story flow
-[Hook] Catchy chorus
-[Verse 2] Escalation
-[Verse 3] Climax
-[Outro] Grand finale
+STYLE PROMPT: {style_data['suno']} | Hindi Rap | Divine Energy
 
 ---
 {result[:800]}...
 """
                         st.download_button(
-                            "🎵 **SUNO METADATA**",
+                            "🎵 SUNO METADATA",
                             suno_meta,
                             file_name="suno_metadata.txt",
                             use_container_width=True
                         )
                     
                     with col_c:
-                        # Shorts version (Hook only)
+                        # Shorts version
                         if "Hook" in result:
                             hook_start = result.find("Hook")
-                            hook_end = result.find("[", hook_start + 20)
+                            hook_end = result.find("[", hook_start + 10)
                             if hook_end == -1:
                                 hook_end = hook_start + 300
                             hook_section = result[hook_start:hook_end]
@@ -393,28 +359,26 @@ STRUCTURE:
 #DivineRapTv #{topic.replace(' ', '')} #BhaktiRap #ViralSong
 """
                         st.download_button(
-                            "📱 **SHORTS VERSION**",
+                            "📱 SHORTS VERSION",
                             shorts,
                             file_name="shorts_version.txt",
                             use_container_width=True
                         )
                     
-                    # Success metrics
+                    # Metrics
                     lines = [l for l in result.split('\n') if l.strip() and not l.strip().startswith('[')]
                     word_count = sum(len(l.split()) for l in lines)
                     
-                    col_stat1, col_stat2, col_stat3, col_stat4 = st.columns(4)
+                    col_stat1, col_stat2, col_stat3 = st.columns(3)
                     with col_stat1:
                         st.metric("📝 Total Lines", len(lines))
                     with col_stat2:
                         st.metric("📊 Total Words", word_count)
                     with col_stat3:
-                        st.metric("🎵 Suno Ready", "✅ Yes")
-                    with col_stat4:
-                        st.metric("🔱 Viral Score", "💯/💯")
+                        st.metric("🎵 Suno Ready", "✅")
                     
                     st.balloons()
-                    st.success("🎉 **SONG READY! अब Suno AI / Udio में डालकर FULL SONG बनाएं!** 🎉")
+                    st.success("🎉 SONG READY! Now use in Suno AI / Udio to create full song!")
                     
                 else:
                     st.error(result)
@@ -423,9 +387,8 @@ STRUCTURE:
 st.markdown("---")
 st.markdown("""
 <div style="text-align: center; padding: 1rem;">
-    <p style="color: #ff8844;">🔱 <strong>DivineRapTv - FINAL RAP ENGINE</strong> 🔱</p>
+    <p style="color: #ff8844;">🔱 DivineRapTv - FINAL RAP ENGINE 🔱</p>
     <p style="color: #ffaa66;">Hardcore + Flow + Bhakti + Story = VIRAL RAP</p>
-    <p style="color: #ff8866; font-size: 0.8rem;">🎤 Divine Intro | Powerful Hook | Story Verses | Grand Outro 🎤</p>
-    <p style="color: #ff6644; font-size: 0.7rem;">✨ Perfect for Suno AI v5.5 | Udio | YouTube Shorts | Viral Reels ✨</p>
+    <p style="color: #ff8866;">🎤 Divine Intro | Powerful Hook | Story Verses | Grand Outro 🎤</p>
 </div>
 """, unsafe_allow_html=True)
