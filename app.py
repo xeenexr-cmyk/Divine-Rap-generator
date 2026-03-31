@@ -1,116 +1,107 @@
 import streamlit as st
 from groq import Groq
 
-# API Key setup
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
-# Page Configuration
-st.set_page_config(page_title="DivineRapTv Hyper-Engine", layout="wide", page_icon="🔱")
+st.set_page_config(page_title="DivineRapTv BEAST ENGINE", layout="wide", page_icon="🔱")
 
-# UI Styling
+# Ultra Dark UI for Hardcore Feel
 st.markdown("""
     <style>
-    .main { background-color: #000000; color: #ffffff; }
-    .stButton>button { width: 100%; background-color: #ff0000; color: white; border-radius: 5px; height: 3.5em; font-weight: bold; border: none; }
-    .stTextInput>div>div>input { background-color: #1a1a1a; color: white; border: 1px solid #ff0000; }
+    .main { background-color: #050505; color: #ff0000; }
+    .stButton>button { width: 100%; background: linear-gradient(45deg, #8b0000, #ff0000); color: white; border-radius: 2px; height: 4em; font-weight: 900; border: none; letter-spacing: 2px; }
+    .stTextInput>div>div>input { background-color: #111; color: #ff4b4b; border: 1px solid #444; font-size: 1.2em; }
     </style>
     """, unsafe_allow_html=True)
 
-st.title("🔱 DivineRapTv - HYPER-ENGINE 10/10 🔥")
-st.subheader("No Poetry. No Similes. Pure Hardcore Rap.")
+st.title("🔱 DivineRapTv - THE BEAST ENGINE 10/10 🔥")
+st.subheader("Bhakti x Hardcore Hip-Hop | Raw. Lethal. Divine.")
 
-# --- INPUT SECTION ---
 col1, col2 = st.columns([2, 1])
 
 with col1:
-    topic = st.text_input("🎯 Enter Topic (जैसे: अघोरी शिव, कालभैरव, तांडव)", placeholder="Topic likho aur aag lagao...")
+    topic = st.text_input("🎯 Enter War Topic", placeholder="Example: Aghori Tandav, Ravan Vinash...")
 
 with col2:
-    style = st.selectbox("🎭 Select Rap Persona", [
-        "Hardcore Kill Flow (Divine Style) 🔥", 
-        "Fast Story Rap (Raftaar Style) 📖", 
-        "Deep Soul Rap (Emotional Punch) 😭"
+    style = st.selectbox("🎭 Select Attack Mode", [
+        "FATAL ATTACK (Divine/Aggressive) 🔥", 
+        "WAR STORY (Cinematic Fast Flow) 📖", 
+        "DARK DEVOTION (Gothic/Heavy) 💀"
     ])
 
-generate = st.button("🚀 GENERATE RAW HARDCORE RAP")
+generate = st.button("🚀 UNLEASH THE BEAST")
 
-# --- THE "NO-POETRY" PROMPT LOGIC ---
+# --- THE HARDCORE PROMPT ENGINE ---
 def build_prompt(topic, style):
     return f"""
-तुम एक 'Aggressive Hip-Hop Ghostwriter' हो। तुम कविता (Poem) से नफरat करते हो।
+तुम एक 'Cold-Blooded Hip-Hop Ghostwriter' हो। तुम्हें कविता और 'है/हूँ' जैसे शब्दों से नफरत है।
 
 🎯 TOPIC: {topic}
 🎭 STYLE: {style}
 
-❗ STRICT RULES (FOLLOW OR BE FIRED):
-1. NO SIMILES: "जैसे", "समान", "जैसा", "तैसे" का प्रयोग 100% मना है। (Example: Don't say 'Tiger jaisa', say 'Main Tiger').
-2. NO FILLERS: "है", "हूँ", "था", "थी", "रहा", "रही" को 95% डिलीट करो। 
-3. SYLLABLE CONTROL: हर लाइन में सिर्फ 4 से 5 शब्द होने चाहिए। 
-4. STACCATO FLOW: लाइनें काटने वाली और छोटी हों। (Example: 'आँखों में आग। लंका राख।')
-5. DIRECT IMPACT: सीधा वार करो। शब्दों में भारीपन (Heavy Vocabulary) लाओ।
+❗ FATAL ERROR - NEVER USE:
+- "है", "हूँ", "था", "थी", "रहा", "रही", "होता", "करती" (Delete them all!)
+- "जैसे", "जैसा", "तैसे" (No Similes)
+
+✅ MANDATORY RAP RULES:
+1. NO VERBS: सीधा शब्द मारो। (Example: Don't say 'Shiv tandav karta hai', say 'महाकाल तांडव! आँखों में आग!')
+2. SYLLABLE ATTACK: हर लाइन में सिर्फ 3 से 4 भारी शब्द।
+3. RHYME CRUNCH: हर 2 लाइन में धाकड़ internal और end rhyme (AABB)।
+4. VOCABULARY: Use words like: 'भस्म', 'काल', 'रक्त', 'प्रहार', 'चक्र', 'मंजर', 'खंजर', 'अंगार'।
 
 STRUCTURE:
-[Intro] - 2 Cold Lines (No music, just attitude)
-[Verse 1] - 12 Lines (Rhyme scheme: AABB, Fast attack)
-[Hook] - 4 Lines (Chant/Mantra Style - Extreme Energy)
-[Verse 2] - 12 Lines (Aggressive Punchlines & Metaphors)
-[Outro] - 1 Line (Mic Drop)
+[Intro] - 2 Breathless Lines
+[Verse 1] - 16 Short Power Lines (Aggressive Flow)
+[Hook] - 4 Lines (High Pitch Chant - Viral Power)
+[Verse 2] - 16 Short Power Lines (Punchlines & Metaphors)
+[Outro] - 1 Brutal Mic Drop Line
 """
 
 def refine_prompt(raw):
     return f"""
-ये lyrics अभी भी थोड़े 'Soft' हैं। इन्हें 'Hardcore Hip-Hop' में बदलो:
+ये lyrics अभी भी 'Soft' हैं। इन्हें 'Lethal Rap' में बदलो:
 {raw}
 
-FIX PROTOCOL:
-1. "जैसे" (Like/As) वाली सारी लाइनें हटाओ। उन्हें 'Direct Statement' बनाओ।
-2. हर line से "है/रहा" हटाकर उसे Short करो। 
-3. Rhymes को 'Perfect' और 'Punchy' बनाओ।
-4. Flow को इतना 'Tight' करो कि बीट (Beat) पर धमाका हो।
+REFINEMENT PROTOCOL:
+1. हर line से "है/रहा/होता" निकालो। उसे 'Direct Punch' बनाओ।
+2. शब्दों को 'भारी' (Heavy Sanskrit/Hindi) करो।
+3. Flow ऐसा हो कि हर शब्द एक गोली (Bullet) की तरह लगे।
+4. Rhyme Scheme को Professional Level पर सेट करो।
 
-Final Raw Rap:
+Final Hardcore Beast Version:
 """
 
-# --- GENERATION ENGINE ---
 def generate_song(topic, style):
     try:
-        # Step 1: Raw Draft
-        raw_res = client.chat.completions.create(
+        # Step 1: Raw Aggression
+        raw = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
-            messages=[{"role": "system", "content": "तुम Raw Rap Writer हो।"},
+            messages=[{"role": "system", "content": "तुम एक Raw Hip-Hop Artist हो।"},
                       {"role": "user", "content": build_prompt(topic, style)}],
-            temperature=0.9
-        )
-        raw = raw_res.choices[0].message.content
+            temperature=1.0 # High temperature for more creativity
+        ).choices[0].message.content
 
-        # Step 2: Rap Filter
-        final_res = client.chat.completions.create(
+        # Step 2: Beast Filter (The Surgeon)
+        final = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
-            messages=[{"role": "system", "content": "तुम एक Hip-Hop Surgeon हो जो कविता को काटकर रैप बनाता है।"},
+            messages=[{"role": "system", "content": "तुम एक Hip-Hop Assassin हो। फालतू शब्द काटो।"},
                       {"role": "user", "content": refine_prompt(raw)}],
             temperature=0.6
-        )
-        return final_res.choices[0].message.content
+        ).choices[0].message.content
+
+        return final
     except Exception as e:
         return f"Error: {str(e)}"
 
-# --- OUTPUT DISPLAY ---
 if generate:
     if not topic:
         st.error("⚠️ Topic daalo pehle!")
     else:
-        with st.spinner("🔥 Hyper-Engine Aag ugal raha hai..."):
+        with st.spinner("🔥 The Beast is writing..."):
             final_lyrics = generate_song(topic, style)
-            
-            st.success("✅ RAW HARDCORE RAP READY! 🎤")
-            st.text_area("🎤 Final Rap for DivineRapTv", final_lyrics, height=600)
-
-            st.download_button(
-                label="📥 Download RAW Rap",
-                data=final_lyrics,
-                file_name=f"{topic}_raw_rap.txt",
-                mime="text/plain"
-            )
+            st.success("✅ THE BEAST HAS SPOKEN! 🎤")
+            st.text_area("🎤 Final Hardcore Rap for DivineRapTv", final_lyrics, height=600)
+            st.download_button("📥 Download Lethal Rap", final_lyrics, file_name=f"{topic}_hardcore.txt")
 
 st.markdown("---")
-st.caption("DivineRapTv Hyper-Engine | Powering the future of Bhakti Rap")
+st.caption("DivineRapTv | 10/10 Beast Engine | No Mercy in Rhymes")
