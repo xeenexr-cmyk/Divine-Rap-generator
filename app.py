@@ -4,78 +4,76 @@ from groq import Groq
 # API setup
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
-# UI Setup
-st.set_page_config(page_title="DivineRapTv v10", page_icon="🔱", layout="wide")
+# UI
+st.set_page_config(page_title="DivineRapTv Studio", layout="wide")
 
 st.markdown("""
     <style>
-    .stApp { background-color: #050505; color: #fff; }
-    .stButton>button { background: linear-gradient(90deg, #8b0000, #ff0000); color: #fff; font-weight: bold; border: 2px solid white; height: 4rem; font-size: 1.5rem; width: 100%; border-radius: 5px; }
-    .stTextArea textarea { color: #00ffcc !important; background-color: #0a0a0a !important; font-family: 'Consolas', monospace; font-size: 1.2rem !important; line-height: 1.8; border: 1px solid #333; }
+    .stApp { background-color: #000; color: #fff; }
+    .stButton>button { background: #ff0000; color: #fff; font-weight: bold; border: none; height: 3.5rem; width: 100%; border-radius: 5px; font-size: 1.2rem; }
+    .stTextArea textarea { color: #00ff00 !important; background-color: #111 !important; font-family: monospace; font-size: 1.2rem !important; }
     </style>
     """, unsafe_allow_html=True)
 
-st.title("🔱 DivineRapTv v10: The Last Stand")
-st.write("### ये रैप सीधा 'Studio Recording' के लिए तैयार होगा।")
+st.title("🔱 DivineRapTv: Studio Bar Generator")
+st.write("---")
 
 col1, col2 = st.columns([1, 1.5])
 
 with col1:
-    topic = st.text_input("🎯 विषय (Topic)", placeholder="जैसे: लंका दहन, कालभैरव तांडव")
-    mode = st.selectbox("🎭 मोड चुनें (Unique Style)", [
-        "Hardcore Aggressive (Divine/Raftaar Style)",
-        "Epic Narrative (Ramayan Flow)",
-        "Deep Soulful (Radha-Krishna/Meera)",
-        "Cinematic Bollywood Fusion"
-    ])
-    generate_btn = st.button("🔥 GENERATE PROFESSIONAL BARS")
+    topic = st.text_input("🎯 विषय (Topic)", placeholder="जैसे: लंका दहन, काल का तांडव")
+    mode = st.selectbox("🎭 म्यूजिक स्टाइल", ["Hardcore Rap", "Epic Storytelling", "Emotional Bhakti"])
+    generate_btn = st.button("🎤 GENERATE BARS")
 
-def build_ultimate_prompt(topic, mode):
-    # इसमें 'Strict Rhyme Pattern' और 'Vocabulary' पर सबसे ज्यादा जोर है
+def build_studio_prompt(topic, mode):
+    # 'Few-Shot' Logic: हमने AI को उदाहरण दिया है कि 'कविता' और 'रैप' में क्या फर्क है
     return f"""
-तुम एक 'World Class Ghostwriter' हो। तुम्हें 'DivineRapTv' के लिए प्रोफेशनल 'Bars' लिखने हैं। 
+तुम एक 'Professional Ghostwriter' हो। तुम्हें 'DivineRapTv' के लिए "Commercial Rap Song" लिखना है, कविता नहीं। 
 
 🎯 TOPIC: {topic}
 🎭 STYLE: {mode}
 
-❗ कड़े निर्देश (FOLLOW RIGIDLY):
-1. **SYLLABLE MATCHING:** पहली लाइन में जितने शब्द/ध्वनि है, दूसरी में भी लगभग उतनी ही होनी चाहिए।
-2. **HEAVY END RHYMES:** "है", "हूँ", "था" पर लाइन खत्म करना सख्त मना है। लाइन संज्ञा (Noun) या क्रिया (Verb) पर खत्म करो।
-   *उदाहरण:* "लंका में **ज्वाला**, मैं मौत का **प्याला**, शत्रु का **दिवाला**।"
-3. **INTERNAL RHYME:** लाइन के बीच में भी तुकबंदी लाओ।
-4. **NO SOFT WORDS:** "अच्छा", "बुरा", "मारूँगा" जैसे साधारण शब्द हटाओ। इसकी जगह "विनाश", "अट्टहास", "कालजयी", "ध्वस्त", "अधर्मी" लाओ।
+❌ कविता (Don't write like this): 
+"लंका में आग लग रही है, रावण घबरा रहा है, हनुमान जी आ रहे हैं।" (बोरिंग!)
 
-📌 FORMAT: 
-[Intro] (Heavy Cinematic Tone)
-[Verse 1] (12 Bars - Strong Rhyme Scheme AABB or ABAB)
-[Hook 🔥] (4 Bars - Catchy and Viral)
-[Verse 2] (12 Bars - Different Rhymes, High Energy)
-[Outro] (Final Punchline)
+✅ रैप सॉन्ग (Write exactly like this):
+"लंका में **ज्वाला**, मौत का **प्याला**,
+काँपेगा रावण, आया **विकराला**।
+आँखों में **क्रोध**, अधर्म का **रोध**,
+राम का नाम, अब होगा **प्रतिशोध**।"
 
-यहाँ से 'Professional Hip-Hop' लिखना शुरू करो:
+❗ STRICT INSTRUCTIONS:
+1. **SHORT LINES:** हर लाइन में सिर्फ 4-6 शब्द होने चाहिए। 
+2. **PERFECT RHYME:** हर 2 लाइन के आखिरी शब्द का 'Sound' सेम होना चाहिए (A-A, B-B)।
+3. **NO 'HE' OR 'HOON':** लाइन के आखिर में 'है', 'हूँ', 'था' जैसे शब्द बिल्कुल नहीं आने चाहिए।
+4. **VOCAB:** भारी और 'Raw' शब्दों का प्रयोग करें (अट्टहास, प्रचंड, विनाश, ध्वंस)।
+
+📌 STRUCTURE: [Intro] -> [Verse 1 (16 Bars)] -> [Hook (Catchy)] -> [Verse 2 (16 Bars)] -> [Outro]
+
+यहाँ से 'Professional Song' लिखना शुरू करो:
 """
 
 if generate_btn:
     if not topic:
-        st.error("टॉपिक लिखो भाई!")
+        st.error("टॉपिक लिखो!")
     else:
-        with st.spinner("🔱 दिव्य शब्दों की रचना हो रही है..."):
+        with st.spinner("🔱 धुन तैयार हो रही है..."):
             try:
-                # Temperature 1.0 - Creativity और Logic का बेस्ट बैलेंस
+                # Temperature 0.9 ताकि AI लय से न भटके
                 response = client.chat.completions.create(
                     model="llama-3.3-70b-versatile",
                     messages=[
-                        {"role": "system", "content": "तुम एक प्रोफेशनल हिप-हॉप लिरिसिस्ट हो। तुम्हारी तुकबंदी और शब्द चयन (Vocabulary) बहुत ही उन्नत है।"},
-                        {"role": "user", "content": build_ultimate_prompt(topic, mode)}
+                        {"role": "system", "content": "तुम एक प्रोफेशनल हिप-हॉप राइटर हो। तुम केवल 'Bars' लिखते हो, कविता नहीं।"},
+                        {"role": "user", "content": build_studio_prompt(topic, mode)}
                     ],
-                    temperature=1.0,
-                    max_tokens=2500
+                    temperature=0.9, 
+                    max_tokens=2000
                 )
 
                 lyrics = response.choices[0].message.content
                 with col2:
-                    st.success("🔱 BARS READY FOR RECORDING!")
-                    st.text_area(label="DivineRapTv Final Script", value=lyrics, height=750)
+                    st.success("🔱 गाना तैयार है!")
+                    st.text_area(label="DivineRapTv Official Script", value=lyrics, height=750)
             except Exception as e:
                 st.error(f"Error: {e}")
                 
