@@ -1,27 +1,10 @@
 import streamlit as st
-import google.generativeai as genai
 
-st.set_page_config(page_title="AI Lyrics", layout="centered")
+st.set_page_config(page_title="Test App", layout="centered")
 
-# API KEY
-genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+st.title("✅ App Working Test")
 
-st.title("🎤 AI Lyrics Generator")
+name = st.text_input("Enter anything")
 
-topic = st.text_input("Enter Topic")
-
-if st.button("Generate"):
-    if topic:
-        try:
-            model = genai.GenerativeModel("gemini-pro")
-
-            response = model.generate_content(
-                f"Write a powerful Hindi rap song on {topic}"
-            )
-
-            st.write(response.text)
-
-        except Exception as e:
-            st.error(e)
-    else:
-        st.warning("Enter topic")
+if st.button("Submit"):
+    st.success(f"App is working 🎉 → {name}")
