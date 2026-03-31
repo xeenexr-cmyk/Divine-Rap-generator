@@ -1,53 +1,27 @@
 import streamlit as st
 import google.generativeai as genai
 
-# CONFIG
-st.set_page_config(page_title="AI Lyrics Pro", layout="centered")
+st.set_page_config(page_title="AI Lyrics", layout="centered")
 
 # API KEY
 genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
-# ✅ UPDATED MODEL
-model = genai.GenerativeModel("gemini-1.5-flash-latest")
-
-st.title("🎤 Bollywood Level AI Lyrics Generator 🔥")
+st.title("🎤 AI Lyrics Generator")
 
 topic = st.text_input("Enter Topic")
-style = st.selectbox("Style", ["Rap", "Bollywood", "Devotional"])
-mood = st.selectbox("Mood", ["Aggressive", "Emotional", "Powerful"])
-keywords = st.text_input("Keywords (optional)")
 
-if st.button("Generate Lyrics"):
-
+if st.button("Generate"):
     if topic:
-        prompt = f"""
-        Write a HIGH QUALITY Hindi {style} song.
-
-        Topic: {topic}
-        Mood: {mood}
-        Keywords: {keywords}
-
-        - No repetition
-        - Strong rhyming
-        - Emotional storytelling
-        - Bollywood level quality
-
-        Structure:
-        Title
-        Verse 1
-        Hook
-        Verse 2
-        Hook
-        Outro
-        """
-
         try:
-            res = model.generate_content(prompt)
-            st.success("✅ Lyrics Generated")
-            st.write(res.text)
+            model = genai.GenerativeModel("gemini-pro")
+
+            response = model.generate_content(
+                f"Write a powerful Hindi rap song on {topic}"
+            )
+
+            st.write(response.text)
 
         except Exception as e:
-            st.error(f"Error: {e}")
-
+            st.error(e)
     else:
-        st.warning("Enter topic first")
+        st.warning("Enter topic")
