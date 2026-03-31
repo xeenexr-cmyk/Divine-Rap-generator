@@ -1,76 +1,74 @@
 import streamlit as st
 from groq import Groq
 
-# API setup
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
-# UI Setup for a Premium Experience
-st.set_page_config(page_title="Divine Rap Studio: GOD MODE", page_icon="🔱", layout="wide")
+st.set_page_config(page_title="Divine Rap Studio: ULTIMATE", layout="wide")
 
+# CSS for a Raw Hip-Hop Look
 st.markdown("""
     <style>
-    .stApp { background-color: #000000; color: #ffffff; }
-    .stButton>button { width: 100%; border-radius: 2px; background: linear-gradient(45deg, #4b0082, #ff0000); color: white; font-weight: 900; height: 3.5em; border: 1px solid #ff0000; font-size: 1.4rem; box-shadow: 0px 0px 20px #ff000055; }
-    .stTextInput input { background-color: #0a0a0a; color: #ff3e3e; border: 1px solid #444; font-size: 1.2rem; }
-    .stTextArea textarea { font-size: 1.2rem !important; color: #00ff00 !important; background-color: #050505 !important; font-family: 'Courier New', monospace; line-height: 1.5; }
+    .stApp { background-color: #000; color: #fff; }
+    .stButton>button { background: linear-gradient(90deg, #ff0000, #440000); color: #fff; font-weight: bold; border: none; height: 3.5rem; font-size: 1.5rem; width: 100%; border-radius: 10px; }
+    .stTextArea textarea { color: #00ff00 !important; background-color: #111 !important; font-family: monospace; font-size: 1.2rem !important; }
     </style>
     """, unsafe_allow_html=True)
 
-st.title("🔱 Divine Rap Studio: THE GOD MODE")
-st.write("### DivineRapTv: शब्दों की आग, महादेव का साथ।")
+st.title("🔱 Divine Rap Studio: THE ULTIMATE")
+st.write("### DivineRapTv के लिए अब निकलेगी असली आग!")
 
-col1, col2 = st.columns([1, 1.4])
+col1, col2 = st.columns([1, 1.5])
 
 with col1:
-    topic = st.text_input("🎯 विषय (Topic)", placeholder="जैसे: शिव तांडव, रावण वध, अघोरी की राख")
-    mode = st.selectbox("🎭 फ्लो चुनें", ["Hardcore Boom Bap", "Aggressive Trap", "Vedic Drill"])
-    st.divider()
-    generate_btn = st.button("🔥 UNLEASH THE TANDAV")
+    topic = st.text_input("🎯 रैप का विषय", placeholder="जैसे: श्मशान का राजा, काल का तांडव")
+    mode = st.selectbox("🎭 फ्लो", ["Aggressive Battle Rap", "Dark Aghori Vibe", "Fast Chopper Flow"])
+    generate_btn = st.button("🔥 ACTIVATE BEAST MODE")
 
-def build_god_mode_prompt(topic, mode):
+def build_beast_prompt(topic, mode):
+    # यहाँ 'Few-Shot' टेक्निक यूज़ की है ताकि AI को पता चले कि 'Bars' क्या होते हैं
     return f"""
-तुम भारत के सबसे बड़े Battle Rapper और संस्कृत के विद्वान हो। 'DivineRapTv' के लिए 'Vedic Rap' लिखो।
+तुम एक 'Underground Battle Rapper' हो। तुम्हें 'DivineRapTv' के लिए "Hardcore Devotional Rap" लिखना है। 
+भजन मत लिखो, 'Bars' लिखो।
 
 🎯 TOPIC: {topic}
 🎭 STYLE: {mode}
 
-❗ कड़े नियम (STRICT RULES):
-1. **NO REPETITION:** Verse 1 और Verse 2 में एक भी लाइन या 'Rhyme' रिपीट नहीं होनी चाहिए। अगर Verse 1 में 'अकाल' यूज़ किया, तो Verse 2 में 'महाकाल' या 'विकराल' लाओ।
-2. **MULTISYLLABIC RHYMES:** तुकबंदी गहरी होनी चाहिए (जैसे: 'विनाश' - 'अट्टहास', 'प्रचंड' - 'अखंड', 'त्रिनेत्र' - 'कुरुक्षेत्र')।
-3. **PUNCHLINES:** हर 2 लाइन के बाद एक ऐसी लाइन लिखो जो सुनने वाले की रूह कँपा दे।
-4. **FLOW METER:** हर लाइन 8-10 शब्दों की हो। छोटे शब्द, भारी इम्पैक्ट।
+🔥 RHYME REFERENCE (ऐसा लिखो):
+"सिर पे **कपाल**, गले में **काल**, 
+मैं हूँ **विकराल**, मचा दूँ **बवाल**।" 
 
-📌 FORMAT:
-[Intro] (मंत्रों का उच्चारण + भारी डायलॉग)
-[Verse 1] (8 अलग लाइन्स - Power Bars)
-[Hook 🔥] (4 लाइन्स - Viral material, catchy rhythmic flow)
-[Verse 2] (8 बिल्कुल नयी लाइन्स - गहरे शब्द और अलग Rhyme scheme)
-[Outro] (सन्नाटा और अंत)
+❗ सख्त निर्देश (STRICT RULES):
+1. **PERFECT END-RHYMES:** हर दो लाइन का आखिरी शब्द आपस में मैच होना चाहिए (A-A-B-B Pattern)।
+2. **NO 'HOON' ENDINGS:** 'करता हूँ', 'खड़ा हूँ' जैसे शब्दों पर लाइन खत्म न करो। भारी संज्ञा (Nouns) का प्रयोग करो।
+3. **METAPHORS:** शिव को 'मौत का सौदागर', 'राख का राजा', 'शून्य का शोर' बोलो।
+4. **NO REPETITION:** हर Verse में एकदम नए शब्द होने चाहिए।
 
-लिखना शुरू करो:
+📌 FORMAT: [Intro] -> [Verse 1 (8 Bars)] -> [Hook (Catchy)] -> [Verse 2 (8 Bars)] -> [Outro]
+
+यहाँ से 'Aggressive' शुरुआत करो:
 """
 
 if generate_btn:
     if not topic:
-        st.error("टॉपिक लिखो भाई!")
+        st.warning("टॉपिक लिखो!")
     else:
-        with st.spinner("🔱 शब्द त्रिलोक से आ रहे हैं..."):
+        with st.spinner("🔱 महाकाल के दरबार से शब्द आ रहे हैं..."):
             try:
-                # Temperature 1.0 (Creativity + Precision का परफेक्ट बैलेंस)
+                # Temperature 1.25 ताकि वो बोरिंग न हो
                 response = client.chat.completions.create(
                     model="llama-3.3-70b-versatile",
                     messages=[
-                        {"role": "system", "content": "तुम एक 'Pro Rap Ghostwriter' हो। तुम्हारी शब्दावली बहुत गहरी और डार्क है।"},
-                        {"role": "user", "content": build_god_mode_prompt(topic, mode)}
+                        {"role": "system", "content": "तुम एक खतरनाक रैपर हो। तुम्हारी हिंदी बहुत गहरी और 'Raw' है।"},
+                        {"role": "user", "content": build_beast_prompt(topic, mode)}
                     ],
-                    temperature=1.0, 
-                    max_tokens=2500
+                    temperature=1.25, 
+                    max_tokens=2000
                 )
 
                 lyrics = response.choices[0].message.content
                 with col2:
                     st.success("🔱 तांडव के लिए तैयार!")
-                    st.text_area(label="DivineRapTv Official Masterpiece", value=lyrics, height=750)
+                    st.text_area(label="DivineRapTv Official", value=lyrics, height=700)
             except Exception as e:
                 st.error(f"Error: {e}")
                 
