@@ -6,10 +6,10 @@ from io import BytesIO
 import moviepy.editor as mp
 
 st.set_page_config(page_title="Divine Rap AI Factory", layout="wide")
-st.title("🎤 Divine Rap AI Content Factory (Ultimate 🔥)")
+st.title("🎤 Divine Rap AI Content Factory (Bollywood Pro 🔥)")
 
 menu = st.sidebar.selectbox("Choose Tool", [
-    "Auto Song Generator",
+    "Bollywood Song Generator",
     "Hook Generator",
     "Caption + Hashtags",
     "Image Generator",
@@ -18,66 +18,80 @@ menu = st.sidebar.selectbox("Choose Tool", [
 ])
 
 # -------------------------------
-# AUTO SONG GENERATOR
+# 🎤 BOLLYWOOD SONG GENERATOR
 # -------------------------------
 def generate_song(topic, style):
-    intro = f"🎤 {topic}\n\n"
+    import random
 
-    if style == "Rap":
-        verse = [
-            "Beat pe aaya Mahadev ka flow",
-            "Trinetra khule to lage sab slow",
-            "Damru ki dhun me universe lost",
-            "Shiv naam le, tu ban ja boss"
+    title = f"🎤 {topic}\n\n"
+
+    # Different style tones
+    if style == "Emotional":
+        verse_lines = [
+            "तेरे बिना ये जीवन अधूरा सा लगे",
+            "तेरी यादों में हर पल दिल ये जले",
+            "आँखों में तेरी छवि बस जाती है",
+            "हर सांस में बस तेरा नाम ही रहे"
         ]
-        hook = ["🔥 Har Har Mahadev!", "🚩 Bam Bam Bhole!", "⚡ Shiv on the beat!"]
 
     elif style == "Bhajan":
-        verse = [
-            "Shiv Shambhu mere mann me base",
-            "Har pal tera naam hi jape",
-            "Kailash pati tum ho sahara",
-            "Bhakton ka tum ho ujiyara"
+        verse_lines = [
+            "तेरा नाम ही मेरी पूजा बने",
+            "तेरे चरणों में ये जीवन ढले",
+            "हर पल तेरा ही ध्यान रहे",
+            "मेरे मन में बस तू ही बसे"
         ]
-        hook = ["🙏 Har Har Mahadev", "🕉️ Om Namah Shivay", "🌼 Jai Shiv Shankar"]
 
-    elif style == "Emotional":
-        verse = [
-            "Sati ka prem kabhi mita nahi",
-            "Virah me bhi wo jhuka nahi",
-            "Aansu me bhi bhakti thi",
-            "Unki kahani alag hi thi"
+    elif style == "Tandav":
+        verse_lines = [
+            "जब तांडव करे तू, धरती भी डरे",
+            "तेरी ज्वाला से ये जग सारा जले",
+            "तेरी शक्ति से ब्रह्मांड हिले",
+            "तेरे क्रोध से समय भी थमे"
         ]
-        hook = ["💔 Mahadev...", "😢 Sati...", "🙏 Shiv Shambhu"]
 
-    else:  # Tandav
-        verse = [
-            "Tandav kare jab Mahakaal",
-            "Hil jaaye pura brahmand saal",
-            "Agni jale aur dharti hile",
-            "Shiv ka roop sabko jala de"
+    else:  # Rap
+        verse_lines = [
+            "तेरे नाम की गूंज हर जगह फैले",
+            "तेरी शक्ति से हर डर ये भागे",
+            "जब तू साथ हो तो किस बात का डर",
+            "तेरे नाम से ही जीत ये मिले"
         ]
-        hook = ["🔥 Tandav!", "⚡ Mahakaal!", "💥 Har Har Mahadev!"]
 
-    song = intro
-    song += "🎶 Verse 1:\n" + "\n".join(random.sample(verse, 3)) + "\n\n"
-    song += "🎧 Hook:\n" + random.choice(hook) + "\n\n"
-    song += "🎶 Verse 2:\n" + "\n".join(random.sample(verse, 3)) + "\n\n"
-    song += "🎧 Hook:\n" + random.choice(hook) + "\n\n"
-    song += "✨ Outro:\nMahadev ka naam hi antim satya hai 🙏"
+    hook_lines = [
+        "🔥 हर हर महादेव!",
+        "🚩 बम बम भोले!",
+        "⚡ जय शिव शंकर!"
+    ]
+
+    # Create verses
+    verse1 = "\n".join(random.sample(verse_lines, 3))
+    verse2 = "\n".join(random.sample(verse_lines, 3))
+
+    hook = random.choice(hook_lines)
+
+    outro = "✨ तेरे नाम में ही मेरी दुनिया, महादेव 🙏"
+
+    # Final Song
+    song = title
+    song += "🎶 Verse 1:\n" + verse1 + "\n\n"
+    song += "🎧 Hook:\n" + hook + "\n\n"
+    song += "🎶 Verse 2:\n" + verse2 + "\n\n"
+    song += "🎧 Hook:\n" + hook + "\n\n"
+    song += outro
 
     return song
 
 # -------------------------------
-# HOOK
+# HOOK GENERATOR
 # -------------------------------
 def generate_hooks(topic):
     hooks = [
-        "⚡ 3 sec me dimag hil jayega!",
-        "🚩 Ye sunke ro padoge...",
-        "🔥 Shiv bhakt ho to ye zarur dekho!",
-        "😳 Aisa rap pehle kabhi nahi suna!",
-        "💥 Ye video skip mat karna!"
+        "⚡ ये सुनकर दिमाग हिल जाएगा!",
+        "🔥 ये वीडियो skip मत करना!",
+        "🚩 हर शिव भक्त के लिए जरूरी!",
+        "😳 ऐसा पहले कभी नहीं देखा!",
+        "💥 ये सच आपको हिला देगा!"
     ]
     return "\n".join(random.sample(hooks, 3))
 
@@ -98,11 +112,11 @@ def generate_image(prompt):
 # UI
 # -------------------------------
 
-if menu == "Auto Song Generator":
+if menu == "Bollywood Song Generator":
     topic = st.text_input("Enter topic")
     style = st.selectbox("Select Style", ["Rap", "Bhajan", "Emotional", "Tandav"])
 
-    if st.button("Generate Full Song"):
+    if st.button("Generate Full Bollywood Song"):
         st.write(generate_song(topic, style))
 
 elif menu == "Hook Generator":
@@ -118,24 +132,10 @@ elif menu == "Caption + Hashtags":
 elif menu == "Image Generator":
     prompt = st.text_input("Enter image idea")
 
-    ratio = st.selectbox("Aspect Ratio", ["1:1", "9:16", "16:9"])
-
     if st.button("Generate Image"):
         img = generate_image(prompt)
-
-        if ratio == "9:16":
-            size = (720,1280)
-        elif ratio == "16:9":
-            size = (1280,720)
-        else:
-            size = (1024,1024)
-
-        img = img.resize(size)
+        img = img.resize((720,1280))
         st.image(img)
-
-        img.save("image.png")
-        with open("image.png", "rb") as f:
-            st.download_button("Download Image", f)
 
 elif menu == "Image → Video":
     images = st.file_uploader("Upload images", accept_multiple_files=True)
@@ -161,8 +161,8 @@ elif menu == "Text → Video":
     if st.button("Generate Video"):
         scenes = [
             f"{topic} divine energy",
-            f"{topic} powerful shiva form",
-            f"{topic} cosmic tandav"
+            f"{topic} cinematic shiva",
+            f"{topic} tandav fire"
         ]
 
         files = []
