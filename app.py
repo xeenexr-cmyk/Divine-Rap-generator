@@ -17,81 +17,62 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("🔱 DivineRapTv - ULTIMATE 10/10 RAP ENGINE 🔥")
-st.subheader("Bhakti + Rap + Emotion | All-In-One AI Writer")
+st.subheader("Bhakti + Rap + Emotion | No Poems, Pure Hip-Hop")
 
 # --- INPUT SECTION ---
 col1, col2 = st.columns([2, 1])
 
 with col1:
-    topic = st.text_input("🎯 Enter Topic (जैसे: शिव तांडव, लंका दहन, कृष्ण विरह)", placeholder="Apna topic likho...")
+    topic = st.text_input("🎯 Enter Topic (जैसे: लंका दहन, कालभैरव अष्टक)", placeholder="Apna topic likho...")
 
 with col2:
-    # Based on your Exact Requirement Image
     style = st.selectbox("🎭 Select Writing Style", [
         "Hardcore Rap (Divine/Raftaar Style) 🔥", 
-        "Ramayan Story Rap (Katha Flow) 📖", 
-        "Radha-Krishna Prem (Virah/Melodic) ❤️", 
-        "Meera Bhakti Pain (Soulful) 😭", 
+        "Ramayan Story Rap (Fast Flow) 📖", 
+        "Radha-Krishna Prem (Melodic Rap) ❤️", 
+        "Meera Bhakti Pain (Soulful Rap) 😭", 
         "Bollywood Bhakti Fusion (Commercial) 🎶"
     ])
 
 generate = st.button("🚀 GENERATE 10/10 MASTERPIECE")
 
-# --- STEP 1: THE BRAINSTORMER (GHOSTWRITER) ---
+# --- STEP 1: THE RAW GHOSTWRITER (RAP FOCUS) ---
 def build_prompt(topic, style):
-    # Defining Persona based on Style
-    if "Hardcore" in style:
-        persona = "तुम एक Aggressive Street Rapper हो। शब्द भारी, कड़क और शक्तिशाली होने चाहिए।"
-        vibe = "Heavy Bass, Fast Flow, Punchlines, Power."
-    elif "Story" in style:
-        persona = "तुम एक आधुनिक कथा-वाचक हो। शब्दों में वर्णन और चित्रण (Imagery) होनी चाहिए।"
-        vibe = "Narrative, Storytelling, Flowing, Cinematic."
-    elif "Prem" in style:
-        persona = "तुम एक Melodic Poet हो। शब्दों में कोमलता, प्रेम और समर्पण होना चाहिए।"
-        vibe = "Soft, Rhyming, Heartfelt, Devotional Love."
-    elif "Pain" in style:
-        persona = "तुम मीरा और सूरदास के आधुनिक रूप हो। शब्दों में विरह, आंसू और तड़प होनी चाहिए।"
-        vibe = "Emotional, Sad, Soulful, Deep Pain."
-    else:
-        persona = "तुम एक Commercial Hit-maker हो। शब्द आसान, Catchy और Danceable होने चाहिए।"
-        vibe = "Energy, Hook-heavy, Easy to Sing, Popular."
-
     return f"""
-{persona} तुम 'DivineRapTv' के लिए सबसे खतरनाक Rap लिख रहे हो।
+तुम भारत के सबसे खतरनाक Hip-Hop Ghostwriter हो। 'DivineRapTv' के लिए Rap लिखो।
 
 🎯 TOPIC: {topic}
 🎭 STYLE: {style}
-🎸 VIBE: {vibe}
 
-❗ STRICT RULES:
-- Language: Hindi/Hinglish Mix.
-- Lines: Short & Crisp (4-6 words max).
-- Rhyme: Perfect AA-BB pattern.
-- NO Fillers: "है/हूँ/था/गा" जैसे फालतू शब्द हटाओ। सीधा प्रहार करो।
-- Vocabulary: Topic के हिसाब से शुद्ध और गहरे शब्दों का चुनाव करो।
+❗ STRICT RAP RULES:
+- NO POETRY: कविता मत लिखो। कहानी मत सुनाओ। शब्दों से प्रहार करो।
+- NO FILLERS: "है/हूँ/था/थी/रहा/रही" जैसे शब्दों को 90% हटा दो। 
+- STACCATO FLOW: हर लाइन 4-6 शब्दों की हो। छोटी लाइन = तेज़ फ्लो।
+- ATTITUDE: शब्दों में वज़न और 'Street Credibility' हो।
+- RHYME: Internal Rhymes (लाइन के बीच में तुकबंदी) और End Rhymes (AA-BB) कड़क हों।
+
+Example of Good Rap Flow: 
+"लंका का द्वार, आँखों में आग। दशानन का काल, सब होगा राख!" (Short and Punchy)
 
 STRUCTURE:
-[Intro] (2 Powerful Lines)
-[Verse 1] (12 Lines - Build the story/power)
-[Hook] (4 Lines - Most Catchy, Mantra-like, Viral material)
-[Verse 2] (12 Lines - Take it to the next level)
-[Hook] (Repeat)
-[Outro] (1 Deep Ending Line)
-
-लिखना शुरू करो:
+[Intro] (2 Cold Lines)
+[Verse 1] (12 Fast Lines)
+[Hook] (4 Viral/Chant Lines - Heavy Energy)
+[Verse 2] (12 Fast Lines - Punchline Heavy)
+[Outro] (1 Mic Drop Line)
 """
 
 # --- STEP 2: THE REFINER (LYRICS IMPROVER) ---
 def refine_prompt(raw):
     return f"""
-इन lyrics को सुधारो और 10/10 बनाओ:
+इन lyrics को 'Poem' से 'Hardcore Rap' में बदलो:
 {raw}
 
-RULES FOR IMPROVEMENT:
-1. Rhyme Scheme को और सटीक (tight) करो।
-2. कमजोर लाइनों को 'Banger' पंचलाइन से बदलो।
-3. शब्दों का वजन बढ़ाओ (Use synonyms of Power/Emotion)।
-4. 'Flow' चेक करो ताकि रैपर सांस न फूले।
+FIX THESE:
+1. 'है/हैं' जैसे शब्दों को हटाकर 'Punchlines' बढ़ाओ।
+2. हर 2 लाइन के बाद एक भारी Metaphor डालो।
+3. Flow को 'Tight' करो ताकि 90-100 BPM की बीat पर फिट आए।
+4. Rhyme Scheme को Complex और Professional बनाओ।
 
 Improved Lyrics:
 """
@@ -99,44 +80,44 @@ Improved Lyrics:
 # --- STEP 3: THE VIRAL DOCTOR (FINAL POLISH) ---
 def validate_prompt(refined):
     return f"""
-Final Check for DivineRapTv Channel:
+तुम Viral Rap Doctor हो। DivineRapTv के लिए Final Check करो:
 {refined}
 
 TASK:
-1. 'Hook' को महा-शक्तिशाली बनाओ (इसमें कोई मंत्र या भगवान का नाम लय में जोड़ो)।
-2. 'Intro' में सस्पेंस डालो।
-3. पूरे गाने को एक 'Masterpiece' का रूप दो।
+1. Hook को 'Anthem' जैसा बनाओ (Chants + Power)।
+2. 'Verse' में Aggression और Devotion का Perfect Mix हो।
+3. सुनिश्चित करो कि यह पढ़ने में कविता नहीं, 'ASLI RAP' लगे।
 
-Final 10/10 Version:
+Final 10/10 Rap Version:
 """
 
 # --- GENERATION ENGINE ---
 def generate_song(topic, style):
     try:
-        # Step 1: Raw Draft
+        # Step 1
         raw_res = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[{"role": "system", "content": "तुम Raw Rap Writer हो"},
                       {"role": "user", "content": build_prompt(topic, style)}],
-            temperature=0.8
+            temperature=0.85
         )
         raw = raw_res.choices[0].message.content
 
-        # Step 2: Refinement
+        # Step 2
         refined_res = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
-            messages=[{"role": "system", "content": "तुम Expert Lyrics Improver हो"},
+            messages=[{"role": "system", "content": "तुम Expert Hip-Hop Refiner हो"},
                       {"role": "user", "content": refine_prompt(raw)}],
-            temperature=0.7
+            temperature=0.75
         )
         refined = refined_res.choices[0].message.content
 
-        # Step 3: Final Polish
+        # Step 3
         final_res = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
-            messages=[{"role": "system", "content": "तुम Viral Rap Doctor हो"},
+            messages=[{"role": "system", "content": "तुम Viral Rap Specialist हो"},
                       {"role": "user", "content": validate_prompt(refined)}],
-            temperature=0.6
+            temperature=0.65
         )
         return final_res.choices[0].message.content
     except Exception as e:
@@ -147,18 +128,18 @@ if generate:
     if not topic:
         st.error("⚠️ अरे भाई! पहले Topic तो डालो।")
     else:
-        with st.spinner(f"🔥 {style} के हिसाब से 10/10 Masterpiece बन रहा है..."):
+        with st.spinner(f"🔥 {style} के हिसाब से 10/10 Rap तैयार हो रहा है..."):
             final_lyrics = generate_song(topic, style)
             
-            st.success("✅ YOUR DIVINE RAP IS READY! 🔥")
-            st.text_area("🎤 Final Lyrics for DivineRapTv", final_lyrics, height=600)
+            st.success("✅ ASLI RAP READY! 🎤")
+            st.text_area("🎤 Final Rap for DivineRapTv", final_lyrics, height=600)
 
             st.download_button(
-                label="📥 Download Master Lyrics",
+                label="📥 Download Master Rap",
                 data=final_lyrics,
-                file_name=f"{topic}_divineraptv.txt",
+                file_name=f"{topic}_rap.txt",
                 mime="text/plain"
             )
 
 st.markdown("---")
-st.caption("Powered by DivineRapTv 10/10 Engine | Master of Bhakti Rap")
+st.caption("DivineRapTv 10/10 Engine | Dedicated to Bhakti Rap Excellence")
