@@ -1,173 +1,119 @@
 import streamlit as st
-import random
-import requests
+import google.generativeai as genai
 from PIL import Image
+import requests
 from io import BytesIO
-import moviepy.editor as mp
 
-st.set_page_config(page_title="Divine Rap AI Factory", layout="wide")
-st.title("🎤 Divine Rap AI Content Factory (Creator Control 🔥)")
+# CONFIG
+st.set_page_config(page_title="AI Content Factory 🔥", layout="wide")
 
-menu = st.sidebar.selectbox("Choose Tool", [
-    "Smart Rap Generator",
-    "Hook Generator",
-    "Caption + Hashtags",
-    "Image Generator",
-    "Image → Video",
-    "Text → Video"
+# API KEY
+genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+model = genai.GenerativeModel("gemini-1.5-flash")
+
+st.title("🔥 Divine AI Content Factory (Ultimate Pro)")
+
+tabs = st.tabs([
+    "🎤 Lyrics Generator",
+    "🎬 Hook Generator",
+    "📱 Caption + Hashtags",
+    "🖼️ Image Generator"
 ])
 
-# -------------------------------
-# 🔥 SMART RAP GENERATOR
-# -------------------------------
-def generate_rap(topic, mood, keywords):
-    words = keywords.split(",")
+# =========================
+# 🎤 LYRICS GENERATOR
+# =========================
+with tabs[0]:
+    st.header("🎤 Bollywood Level Lyrics Generator")
 
-    aggressive_lines = [
-        "जब गूंजे तेरा नाम, धरती भी कांपे",
-        "तेरे तांडव से समय भी थम जाए",
-        "तेरी शक्ति से हर डर मिट जाए",
-        "तेरे क्रोध में पूरा संसार जल जाए"
-    ]
+    topic = st.text_input("Enter Topic")
+    style = st.selectbox("Style", ["Rap", "Bollywood", "Devotional"])
+    mood = st.selectbox("Mood", ["Aggressive", "Emotional", "Powerful"])
+    keywords = st.text_input("Keywords (optional)")
 
-    emotional_lines = [
-        "तेरी यादों में दिल ये रोता है",
-        "तेरे बिना सब अधूरा लगता है",
-        "तेरा नाम ही अब सहारा है",
-        "तेरी भक्ति में सुकून मिलता है"
-    ]
+    if st.button("Generate Lyrics"):
+        prompt = f"""
+        Write a FULL professional Hindi {style} song.
 
-    devotional_lines = [
-        "तेरा नाम ही मेरी पहचान बने",
-        "तेरे चरणों में ये जीवन ढले",
-        "हर सांस में बस तू ही रहे",
-        "तेरी भक्ति ही मेरा रास्ता बने"
-    ]
+        Topic: {topic}
+        Mood: {mood}
+        Keywords: {keywords}
 
-    if mood == "Aggressive":
-        base = aggressive_lines
-    elif mood == "Emotional":
-        base = emotional_lines
-    else:
-        base = devotional_lines
+        Requirements:
+        - Bollywood level quality
+        - Deep meaningful lyrics
+        - NO repetition
+        - Strong rhyming
+        - Emotional storytelling
 
-    def create_line():
-        word = random.choice(words).strip() if words else topic
-        return f"{word} का असर जब दिल पे छाए,\n{random.choice(base)}"
+        Structure:
+        Intro
+        Verse 1
+        Hook
+        Verse 2
+        Hook
+        Outro
+        """
 
-    verse1 = create_line() + "\n" + create_line()
-    verse2 = create_line() + "\n" + create_line()
+        res = model.generate_content(prompt)
+        st.write(res.text)
 
-    hook = random.choice([
-        "🔥 हर हर महादेव!",
-        "🚩 जय बजरंगबली!",
-        "⚡ जय श्री राम!"
-    ])
+# =========================
+# 🎬 HOOK GENERATOR
+# =========================
+with tabs[1]:
+    st.header("🔥 Viral Hook Generator")
 
-    song = f"🎤 {topic}\n\n"
-    song += "🎶 Verse 1:\n" + verse1 + "\n\n"
-    song += "🎧 Hook:\n" + hook + "\n\n"
-    song += "🎶 Verse 2:\n" + verse2 + "\n\n"
-    song += "🎧 Hook:\n" + hook + "\n\n"
-    song += "✨ Outro:\nतेरा नाम ही मेरी शक्ति है 🙏"
+    hook_topic = st.text_input("Hook Topic")
 
-    return song
+    if st.button("Generate Hook"):
+        prompt = f"""
+        Create 5 viral Hindi hooks for topic: {hook_topic}
 
-# -------------------------------
-# HOOK
-# -------------------------------
-def generate_hooks(topic):
-    hooks = [
-        "⚡ ये वीडियो skip मत करना!",
-        "🔥 3 सेकंड में दिमाग हिल जाएगा!",
-        "🚩 हर भक्त को ये सुनना चाहिए!",
-        "😳 ऐसा पहले कभी नहीं देखा!",
-        "💥 ये सच आपको हिला देगा!"
-    ]
-    return "\n".join(random.sample(hooks, 3))
+        - Short
+        - Catchy
+        - Emotional or powerful
+        """
 
-# -------------------------------
-# CAPTION
-# -------------------------------
-def generate_caption(topic):
-    return f"{topic} 🔱\n\nHar Har Mahadev 🙏\n\n#mahadev #hanuman #shiv #shorts #viral"
+        res = model.generate_content(prompt)
+        st.write(res.text)
 
-# -------------------------------
-# IMAGE
-# -------------------------------
-def generate_image(prompt):
-    url = f"https://image.pollinations.ai/prompt/{prompt}"
-    return Image.open(BytesIO(requests.get(url).content))
+# =========================
+# 📱 CAPTION + HASHTAGS
+# =========================
+with tabs[2]:
+    st.header("📱 Caption + Hashtags Generator")
 
-# -------------------------------
-# UI
-# -------------------------------
+    caption_topic = st.text_input("Content Topic")
 
-if menu == "Smart Rap Generator":
-    topic = st.text_input("Enter topic")
-    mood = st.selectbox("Select Mood", ["Aggressive", "Emotional", "Devotional"])
-    keywords = st.text_input("Enter keywords (comma separated)", "Shiv, Sati, Tandav")
-
-    if st.button("Generate Rap"):
-        st.write(generate_rap(topic, mood, keywords))
-
-elif menu == "Hook Generator":
-    topic = st.text_input("Enter topic")
-    if st.button("Generate Hooks"):
-        st.write(generate_hooks(topic))
-
-elif menu == "Caption + Hashtags":
-    topic = st.text_input("Enter topic")
     if st.button("Generate Caption"):
-        st.write(generate_caption(topic))
+        prompt = f"""
+        Write a viral Instagram caption in Hinglish for: {caption_topic}
 
-elif menu == "Image Generator":
-    prompt = st.text_input("Enter image idea")
+        Also give:
+        - 10 hashtags
+        - SEO optimized
+        """
+
+        res = model.generate_content(prompt)
+        st.write(res.text)
+
+# =========================
+# 🖼️ IMAGE GENERATOR
+# =========================
+with tabs[3]:
+    st.header("🖼️ AI Image Generator")
+
+    img_prompt = st.text_input("Enter Image Prompt")
+    ratio = st.selectbox("Aspect Ratio", ["1:1", "9:16", "16:9"])
 
     if st.button("Generate Image"):
-        img = generate_image(prompt)
-        img = img.resize((720,1280))
-        st.image(img)
+        try:
+            url = f"https://image.pollinations.ai/prompt/{img_prompt}"
+            response = requests.get(url)
+            img = Image.open(BytesIO(response.content))
 
-elif menu == "Image → Video":
-    images = st.file_uploader("Upload images", accept_multiple_files=True)
+            st.image(img, caption="Generated Image")
 
-    if st.button("Create Video") and images:
-        files = []
-
-        for i, img in enumerate(images):
-            name = f"img_{i}.png"
-            with open(name, "wb") as f:
-                f.write(img.read())
-            files.append(name)
-
-        clips = [mp.ImageClip(f).set_duration(2).resize((720,1280)) for f in files]
-        video = mp.concatenate_videoclips(clips)
-
-        video.write_videofile("video.mp4", fps=24)
-        st.video("video.mp4")
-
-elif menu == "Text → Video":
-    topic = st.text_input("Enter topic")
-
-    if st.button("Generate Video"):
-        scenes = [
-            f"{topic} divine energy",
-            f"{topic} cinematic shiva",
-            f"{topic} tandav fire"
-        ]
-
-        files = []
-
-        for i, scene in enumerate(scenes):
-            img = generate_image(scene)
-            name = f"scene_{i}.png"
-            img.save(name)
-            files.append(name)
-            st.image(name)
-
-        clips = [mp.ImageClip(f).set_duration(2).resize((720,1280)) for f in files]
-        video = mp.concatenate_videoclips(clips)
-
-        video.write_videofile("final.mp4", fps=24)
-        st.video("final.mp4")
+        except Exception as e:
+            st.error(f"Error: {e}")
