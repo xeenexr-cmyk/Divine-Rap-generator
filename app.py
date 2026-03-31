@@ -7,8 +7,8 @@ st.set_page_config(page_title="AI Lyrics Pro", layout="centered")
 # API KEY
 genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
-# ✅ SAFE MODEL
-model = genai.GenerativeModel("gemini-1.5-flash")
+# ✅ UPDATED MODEL
+model = genai.GenerativeModel("gemini-1.5-flash-latest")
 
 st.title("🎤 Bollywood Level AI Lyrics Generator 🔥")
 
@@ -27,12 +27,10 @@ if st.button("Generate Lyrics"):
         Mood: {mood}
         Keywords: {keywords}
 
-        Requirements:
-        - Bollywood level quality
+        - No repetition
         - Strong rhyming
-        - NO repetition
-        - Emotional + powerful
-        - Proper structure
+        - Emotional storytelling
+        - Bollywood level quality
 
         Structure:
         Title
